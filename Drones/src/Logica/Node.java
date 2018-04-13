@@ -15,7 +15,9 @@ public class Node {
     private ArrayList<Node> adjacencys;
     //el pesos se guarda en milisegundos
     private ArrayList<Integer> weights;
-    
+    //stores the neightbor a drone should follow when visiting this node
+    //acording to the target node
+    private ArrayList<Integer> shortestNeigthbor;
     //permite ejecutar dijkstra
     private boolean visited;
     private int value;
