@@ -59,14 +59,14 @@ public class MapConstructor {
             Node<Station> first = graph.getNode(i);
             Node<Station> second = graph.getNode(i+1);
             //the two nodes are connected with the corresponding weight
-            graph.connecNodes(first, second, MapHelper.distance(first.getContent(), second.getContent())*pKmPerPixel);
+            graph.addEdge(first, second, MapHelper.distance(first.getContent(), second.getContent())*pKmPerPixel);
         }
         //if the is an odd number of nodes, the las random node is connected with the first random node
         if(nodes%2 != 0){
             Node<Station> first = graph.getNode(nodes-1);
             Node<Station> second = graph.getNode(0);
             //the two nodes are connected with the corresponding weight
-            graph.connecNodes(first, second, MapHelper.distance(first.getContent(), second.getContent())*pKmPerPixel);
+            graph.addEdge(first, second, MapHelper.distance(first.getContent(), second.getContent())*pKmPerPixel);
         }
         //second random connection, to the closest node
         //this can be run without the first part, and stil generate two connections for every node
@@ -82,7 +82,7 @@ public class MapConstructor {
                 //System.out.println("...");
                 if(index >= otherNodes.size()) break;
                 Node<Station> other = otherNodes.get(index);
-                graph.connecNodes(node, other, MapHelper.distance(node.getContent(), other.getContent()));
+                graph.addEdge(node, other, MapHelper.distance(node.getContent(), other.getContent()));
                 index++;
             }
         }
