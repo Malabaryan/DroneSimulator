@@ -51,12 +51,12 @@ public class Grafo<T> {
     }
     
      //connects two nodes, returns true if they were conected
-    public boolean connecNodes(int pIndexNode1, int pIndexNode2,double pWeight){
-        return connecNodes(nodes.get(pIndexNode1), nodes.get(pIndexNode2),pWeight);
+    public boolean addEdge(int pIndexNode1, int pIndexNode2,double pWeight){
+        return addEdge(nodes.get(pIndexNode1), nodes.get(pIndexNode2),pWeight);
     }
     
     //connects two nodes, returns true if they were conected
-    public boolean connecNodes(Node<T> pNode1, Node<T> pNode2,double pWeight){ 
+    public boolean addEdge(Node<T> pNode1, Node<T> pNode2,double pWeight){ 
         return pNode2.connect(pNode1,pWeight) && pNode1.connect(pNode2,pWeight);
     }
     
