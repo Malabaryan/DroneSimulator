@@ -42,7 +42,8 @@ public class MapConstructor {
         //the nodes are created for the graph
         //maybe random needs to be changed so the nodes are distributed better ------------------------------------------------!!!!!
         for(int i = 0; i < nodes; i++){
-            graph.insertNode(new Station(random.nextInt(width),random.nextInt(height)));
+            //genera a los nodos a cierta distancia de la orilla
+            graph.insertNode(new Station(10+random.nextInt(width-20),10+random.nextInt(height-20)));
         }
         
         ArrayList<Node<Station>> graphNodes = graph.getNodes();
@@ -93,7 +94,7 @@ public class MapConstructor {
             node.getContent().setOptimalRoutes(graph.dijkstraList(node));
         }
         //debug imprime los caminos de un nodo para ver el resultado de dijkstra
-        MapHelper.printOptimalRoutes(graph.dijkstraList(graphNodes.get(1)), graph.getNodes());
+        //MapHelper.printOptimalRoutes(graph.dijkstraList(graphNodes.get(1)), graph.getNodes());
     }
     
     
@@ -121,7 +122,7 @@ public class MapConstructor {
         return usefullResult;
     }
 
-    
+    //helper class to order the array of closest nodes
     private static class Pair implements Comparable<Pair>
     {
     public Double value;
@@ -134,6 +135,32 @@ public class MapConstructor {
         return this.value.compareTo(that.value);
     }
     }
+    
+    //returns an ArrayList with all the stations on the map
+    public ArrayList<Station> getStations(){
+        ArrayList<Station> stations = new ArrayList<Station>();
+        ArrayList<Node<Station>> nodes = graph.getNodes();
+        for(Node<Station> node: nodes){
+            stations.add(node.getContent());
+        }
+        
+        return stations;
+    }
+    
+    public ArrayList<Node<Station>> getNodes(){
+
+         return graph.getNodes();
+      
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+    
     
     
 }
