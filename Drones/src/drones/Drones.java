@@ -24,7 +24,7 @@ public class Drones extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("MapDisplay.fxml"));
         
         Scene scene = new Scene(root);
         
@@ -49,9 +49,7 @@ public class Drones extends Application {
         graph.connecNodes(node3, node5, MapHelper.distance(node3.getContent(),node5.getContent()));
         node1.getContent().setOptimalRoutes(graph.dijkstraList(node1));
         MapHelper.printOptimalRoutes(graph.dijkstraList(node1), graph.getNodes());*/
-        MapConstructor map = new MapConstructor(500, 500, 1.0, 30);
-        //free memory from unecesary structures created durign dijkstra
-        System.gc();
+        
     }
 
     /**
