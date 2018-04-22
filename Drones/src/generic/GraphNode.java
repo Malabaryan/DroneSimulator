@@ -11,25 +11,25 @@ import java.util.ArrayList;
  *
  * @author Carlos
  */
-public class Node<T> {
-        private ArrayList<Node<T>> paths;
+public class GraphNode<T> {
+        private ArrayList<GraphNode<T>> paths;
         private ArrayList<Double> weights;
         private boolean visited;
         private T content;
         
         
-        //conect this to other node
+        //conect this to other GraphNode
         //returns true if its not alredy connected to it
-        public boolean connect(Node pTarget, double pWeight){
+        public boolean connect(GraphNode pTarget, double pWeight){
             if(paths.contains(pTarget)) return false;
             paths.add(pTarget); 
             weights.add(pWeight);
             return true;
         }
 
-        public Node(T content) {
+        public GraphNode(T content) {
             this.content = content;
-            paths = new ArrayList<Node<T>>();
+            paths = new ArrayList<GraphNode<T>>();
             weights = new ArrayList<Double>();
             visited = false;
         }
@@ -42,7 +42,7 @@ public class Node<T> {
         this.visited = visited;
     }
 
-    public ArrayList<Node<T>> getPaths() {
+    public ArrayList<GraphNode<T>> getPaths() {
         return paths;
     }
 
