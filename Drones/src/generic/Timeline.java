@@ -19,7 +19,7 @@ public class Timeline {
 
     public Timeline(int pMaxSpace, TimelineController pController) {
         
-        Line = new int[maxSpace * 2];
+        Line = new int[maxSpace];
         maxSpace = pMaxSpace;
     }
     
