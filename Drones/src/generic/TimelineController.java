@@ -9,10 +9,20 @@ package Code;
  *
  * @author DilanHO
  */
-public class TimelineController {
+public class TimelineController extends Thread {
     
     private int ActualTime;
 
+    @Override
+    public void run() {
+        // TODO implement here
+        try {
+            Thread.sleep(1);
+            ActualTime++;
+        } 
+            catch (InterruptedException ex) {System.out.println("Biiip");}
+    }
+    
     public int getActualTime() {
         return ActualTime;
     }
