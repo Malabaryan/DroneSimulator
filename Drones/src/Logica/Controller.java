@@ -29,4 +29,8 @@ public class Controller {
         *Metodo de cada iuno (Bryan, Charlie, Edgerik)*
         */
     }
+    
+    public static void main(String[] args) {
+        
+    }
 }
