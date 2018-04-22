@@ -16,14 +16,14 @@ import java.util.Set;
  *
  * @author Carlos
  */
-public class Grafo<T> {
+public class Graph<T> {
 
     private ArrayList<Node<T>> nodes;
     
     
-    //default grafo constructor
-    //maybe we should use a singleton grafo
-    public Grafo() {
+    //default Graph constructor
+    //maybe we should use a singleton Graph
+    public Graph() {
         nodes = new ArrayList<Node<T>>(30);
     }
     
@@ -31,7 +31,7 @@ public class Grafo<T> {
     
     
     
-    //inserta un nodo en el grafo, passing a create node
+    //inserta un nodo en el Graph, passing a create node
     
     public void insertNode(Node<T> e){
         nodes.add(e);
