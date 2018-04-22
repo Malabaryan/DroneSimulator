@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Logica;
+package Controller;
 
-import generic.Node;
+import Code.GraphNode;
+import Code.Timeline;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -16,19 +17,21 @@ import java.util.Map;
 public class Station {
     private int x;
     private int y;
+    private Timeline LineIn;
+    private Timeline LineOut;
     //precomputed optimal routes
-    private Map<generic.Node<Station>,ArrayList<generic.Node<Station>>> optimalRoutes;
+    private Map<Code.GraphNode<Station>,ArrayList<Code.GraphNode<Station>>> optimalRoutes;
     
     public Station() {
+        this.x = 0;
+        this.y = 0;
+        
     }
 
     public Station(int x, int y) {
         this.x = x;
         this.y = y;
     }
-
-    
-    
     
     //getters and setters- ------------------------------------------------
     public int getX() {
@@ -47,13 +50,31 @@ public class Station {
         this.y = y;
     }
 
-    public Map<Node<Station>, ArrayList<Node<Station>>> getOptimalRoutes() {
+    public Map<GraphNode<Station>, ArrayList<GraphNode<Station>>> getOptimalRoutes() {
         return optimalRoutes;
     }
 
-    public void setOptimalRoutes(Map<Node<Station>, ArrayList<Node<Station>>> optimalRoutes) {
+    public void setOptimalRoutes(Map<GraphNode<Station>, ArrayList<GraphNode<Station>>> optimalRoutes) {
         this.optimalRoutes = optimalRoutes;
     }
+
+    public Timeline getLineIn() {
+        return LineIn;
+    }
+
+    public void setLineIn(Timeline LineIn) {
+        this.LineIn = LineIn;
+    }
+
+    public Timeline getLineOut() {
+        return LineOut;
+    }
+
+    public void setLineOut(Timeline LineOut) {
+        this.LineOut = LineOut;
+    }
+
+    
     
     
     
