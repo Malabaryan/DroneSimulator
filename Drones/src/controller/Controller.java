@@ -6,6 +6,11 @@
 package controller;
 
 import code.TimelineController;
+import java.util.Random;
+import java.util.ArrayList;
+import code.Timeline;
+import code.*;
+
 
 /**
  *
@@ -17,7 +22,7 @@ public class Controller {
     
     private Station[] genStations(int weightMap, int heightMap, int stationCount){
         int sizeOfMatrix = 6;
-        Random rand = new Random();
+        Random rand = new Random(System.currentTimeMillis());
         Station[] Stations = new Station[stationCount];
         int xMatrix,yMatrix ;
         for(Station tStation : Stations){
@@ -33,17 +38,63 @@ public class Controller {
     }
     
 
-    public void runSimulation(int HeightTrack, int WeightTrack, int SimulationTime, int stationCount){
+    public void runSimulation(int HeightTrack, int WeightTrack, int SimulationTime, int stationCount, int tracksByStation){
         
         Station[] Stations = genStations(500,500,stationCount);
+        Graph<Station> GraphMap = new Graph();
+        for(Station thisStation : Stations){
+            GraphMap.insertNode(thisStation);
+        }
         
-        /*
-        - Dejar listas las estaciones
-        - Correr los dijsktras
-        - Correr los aleatorios para las pistas
-
-        *Metodo de cada iuno (Bryan, Charlie, Edgerik)*
-        */
+        /*for each Station
+                set Edges*/
+        
+        for(GraphNode<Station> Nodes : GraphMap.getNodes()){
+            Nodes.getContent().setOptimalRoutes(GraphMap.dijkstraList(Nodes));
+        }
+        
+        
+       
+    }
+    
+    
+    private void probabilisticMethod(int dronesByTrack, Graph<Station> GraphMap, int DronesCount, int stationCount){
+        
+        TimeControl.run();
+        Random rand = new Random(System.currentTimeMillis());
+        int indexStation;
+        Station thisStation;
+        ArrayList<GraphNode<Station>> Route;
+        int dronesSent;
+        
+        while(DronesCount > 0){
+            
+            indexStation = rand.nextInt(stationCount);
+            thisStation = GraphMap.getContent(indexStation);
+            indexStation = rand.nextInt(stationCount);
+            Route = thisStation.getOptimalRoutes().get(GraphMap.getNode(indexStation));
+            dronesSent = rand.nextInt(dronesByTrack) + 1;
+            setTimes(thisStation,Route,dronesSent);
+            DronesCount -= dronesSent;
+            
+        }
+    }
+    
+    private int setTimes(Station pthisStation, ArrayList<GraphNode<Station>> Route, int Drones){
+        
+        double distance;
+        Station thisStation = pthisStation;
+        for(GraphNode<Station> StationOfRoute : Route){
+                distance = Math.sqrt(Math.pow(StationOfRoute.getContent().getX() - thisStation.getX(),2) 
+                + Math.pow(StationOfRoute.getContent().getY() - thisStation.getY(),2)) * 1000;  /*Formule to find distance between two points*/
+            
+                StationOfRoute.getContent().getLineIn().addElementsToMiliSecond(
+                        (int)(TimeControl.getActualTime() + distance/120), Drones);
+                StationOfRoute.getContent().getLineOut().addElementsToMiliSecond(
+                        (int)(TimeControl.getActualTime() + distance/120), Drones);
+                thisStation = StationOfRoute.getContent();
+            }
+        return 0;
     }
     
     public static void main(String[] args) {
