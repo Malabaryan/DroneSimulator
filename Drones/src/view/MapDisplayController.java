@@ -143,10 +143,10 @@ public class MapDisplayController implements Initializable {
         int width = Integer.parseInt(tfAnchoMapa.getText());
         int height = Integer.parseInt(tfAltoMapa.getText());
         int ammountNodes = Integer.parseInt(tfEstaciones.getText());
-        
+        int trips = Integer.parseInt(tfViajes.getText());
         //create a map the size desired by the user;
         //need some serious serialization for graph acces
-        map = new MapConstructor(width, height, 1.0, ammountNodes);
+        map = new MapConstructor(width, height, 1.0, ammountNodes,trips);
         //free memory from unecesary structures created durign dijkstra
         System.gc();
         GraphDisplay.stopDisplay();
