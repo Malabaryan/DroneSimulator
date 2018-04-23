@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.ArrayList;
 import code.Timeline;
 import code.*;
+import java.util.Map;
 
 
 /**
@@ -57,6 +58,26 @@ public class Controller {
        
     }
     
+    private void heuristicMethod(int dronesByTrack, Graph<Station> GraphMap, int DronesCount, int stationCount){
+        
+        TimeControl.run();
+        int indexStation;
+        Station thisStation;
+        ArrayList<GraphNode<Station>> Route;
+        int dronesSent;
+        while (DronesCount>0){
+            for(int i =0; i<GraphMap.getNodes().size() ;i++){
+                //Asignar un valor porcentualidad para k drones / n estaciones
+
+
+                //Asignar de forma de cola los viajes en cada nodo en forma secuencial
+
+                //Asignar todos los viajes hasta que los drones se acaben y tomar como referencia el tiempo mas largo 
+                //para dar el tiempo total de simulacion
+                
+            }
+        }
+    }
     
     private void probabilisticMethod(int dronesByTrack, Graph<Station> GraphMap, int DronesCount, int stationCount){
         
