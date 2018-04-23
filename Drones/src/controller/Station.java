@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Controller;
+package controller;
 
-import Code.GraphNode;
-import Code.Timeline;
+import code.GraphNode;
+import code.Timeline;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -20,7 +20,7 @@ public class Station {
     private Timeline LineIn;
     private Timeline LineOut;
     //precomputed optimal routes
-    private Map<Code.GraphNode<Station>,ArrayList<Code.GraphNode<Station>>> optimalRoutes;
+    private Map<code.GraphNode<Station>,ArrayList<code.GraphNode<Station>>> optimalRoutes;
     
     public Station() {
         this.x = 0;

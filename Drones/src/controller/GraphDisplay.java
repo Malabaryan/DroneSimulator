@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Logica;
+package controller;
 
 import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
@@ -11,8 +11,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
-import Logica.Station;
-import generic.Node;
+import controller.Station;
+import controller.Station;
+import code.GraphNode;
 import helper.RandomNoiseGenerator;
 import java.awt.image.BufferedImage;
 import javafx.embed.swing.SwingFXUtils;
@@ -28,7 +29,7 @@ public class GraphDisplay {
         
         
         //Create a animation to show the animation of the graph
-        public static void startDisplay(GraphicsContext gc, Canvas canvas, ArrayList<Node<Station>> nodes , int width, int height, long pSeed){
+        public static void startDisplay(GraphicsContext gc, Canvas canvas, ArrayList<GraphNode<Station>> nodes , int width, int height, long pSeed){
             final long startNanoTime = System.nanoTime();
          
          BufferedImage bimg = createBackground(width, height, pSeed);
@@ -48,9 +49,9 @@ public class GraphDisplay {
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
             gc.drawImage(img, 0, 0,width*scaleFactor,height*scaleFactor);
             //gc.setLineWidth(2.0);
-            for(generic.Node<Station> node : nodes){
+            for(code.GraphNode<Station> node : nodes){
                 Station station = node.getContent();
-                for(generic.Node<Station> neighbor : node.getPaths()){
+                for(code.GraphNode<Station> neighbor : node.getPaths()){
                    gc.strokeLine((double) station.getX()*scaleFactor,(double)station.getY()*scaleFactor,
                            (double)neighbor.getContent().getX()*scaleFactor, (double)neighbor.getContent().getY()*scaleFactor);
                 }

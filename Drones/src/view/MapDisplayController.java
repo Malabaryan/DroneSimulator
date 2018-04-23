@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package drones;
+package view;
 
-import Logica.GraphDisplay;
-import Logica.MapConstructor;
-import Logica.Station;
-import generic.Node;
+import controller.GraphDisplay;
+import controller.MapConstructor;
+import controller.Station;
+import code.GraphNode;
 import helper.ListenerHelper;
 import java.net.URL;
 import java.util.ArrayList;
