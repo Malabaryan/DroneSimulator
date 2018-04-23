@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Code;
+package code;
 
 /**
  *
@@ -46,8 +46,7 @@ public class Timeline {
         }
         return elementsCount;
     }
-
-
+    
     private int getactualTime() {
         Line[Controller.getActualTime() % maxSpace] = 0;
         return Controller.getActualTime();
