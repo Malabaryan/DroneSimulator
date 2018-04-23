@@ -8,6 +8,7 @@ package controller;
 import code.GraphNode;
 import code.Timeline;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -21,16 +22,31 @@ public class Station {
     private Timeline LineOut;
     //precomputed optimal routes
     private Map<code.GraphNode<Station>,ArrayList<code.GraphNode<Station>>> optimalRoutes;
+    private Map<code.GraphNode<Station>,Integer> remainingTrips;
+    private Map<code.GraphNode<Station>,Integer> costs;
+    
+    private int[] trips;
     
     public Station() {
         this.x = 0;
         this.y = 0;
+        remainingTrips = new HashMap<GraphNode<Station>,Integer>();
         
     }
 
     public Station(int x, int y) {
         this.x = x;
         this.y = y;
+        remainingTrips = new HashMap<GraphNode<Station>,Integer>();
+
+    }
+    
+    public Station(int pX, int pY, int pTotalNodos) {
+        this.x = pX;
+        this.y = pY;
+        remainingTrips = new HashMap<GraphNode<Station>,Integer>();
+        
+        
     }
     
     //getters and setters- ------------------------------------------------
@@ -74,8 +90,10 @@ public class Station {
         this.LineOut = LineOut;
     }
 
+    public void setTrips(GraphNode pTarget, int pAmount){
+        remainingTrips.put(pTarget, pAmount);
+    }
     
-    
-    
+
     
 }
