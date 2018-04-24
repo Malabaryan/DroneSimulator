@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package generic;
+package code;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,13 +18,13 @@ import java.util.Set;
  */
 public class Graph<T> {
 
-    private ArrayList<Node<T>> nodes;
+    private ArrayList<GraphNode<T>> nodes;
     
     
     //default Graph constructor
     //maybe we should use a singleton Graph
     public Graph() {
-        nodes = new ArrayList<Node<T>>(30);
+        nodes = new ArrayList<GraphNode<T>>(30);
     }
     
     
@@ -33,16 +33,16 @@ public class Graph<T> {
     
     //inserta un nodo en el Graph, passing a create node
     
-    public void insertNode(Node<T> e){
+    public void insertNode(GraphNode<T> e){
         nodes.add(e);
     }
     //inserts an element passing only the contained element
     public void insertNode(T pElement){
         
-        nodes.add(new Node<T>(pElement));
+        nodes.add(new GraphNode<T>(pElement));
     }
     
-    public Node<T> getNode(int pIndex){
+    public GraphNode<T> getNode(int pIndex){
         return nodes.get(pIndex);
     }
     
@@ -56,29 +56,29 @@ public class Graph<T> {
     }
     
     //connects two nodes, returns true if they were conected
-    public boolean addEdge(Node<T> pNode1, Node<T> pNode2,double pWeight){ 
+    public boolean addEdge(GraphNode<T> pNode1, GraphNode<T> pNode2,double pWeight){ 
         return pNode2.connect(pNode1,pWeight) && pNode1.connect(pNode2,pWeight);
     }
     
     //returns a map with the minimun distance to every node from a node-----------------------------------------------------------
-    public  Map<Node<T>,Double> dijkstra(Node<T> pOrigen){
-        Map<Node<T>,Double> distance = new HashMap<>();
-        ArrayList<Node<T>> notReady = new ArrayList<>();
+    public  Map<GraphNode<T>,Double> dijkstra(GraphNode<T> pOrigen){
+        Map<GraphNode<T>,Double> distance = new HashMap<>();
+        ArrayList<GraphNode<T>> notReady = new ArrayList<>();
         //cost of going to a certain node
         distance.put(pOrigen,0.0);
         //nodes that need to be procesed
         notReady.add(pOrigen);
         while(notReady.size() > 0){
             //iterates over not visited nodes in the queue
-                Node<T> node = notReady.get(0);
+                GraphNode<T> node = notReady.get(0);
                 notReady.remove(node);
                 node.setVisited(true);
-                ArrayList<Node<T>> neightbors = node.getPaths();
+                ArrayList<GraphNode<T>> neightbors = node.getPaths();
                 ArrayList<Double> weights = node.getWeights();
                 //iterates over neigthbors
                 for(int i = 0; i < neightbors.size(); i++){
                     
-                    Node<T> actual = neightbors.get(i);
+                    GraphNode<T> actual = neightbors.get(i);
                     double actualDistance = weights.get(i);
                     //System.out.println("."+distance.containsKey(actual));
                     if(!distance.containsKey(actual)){
@@ -113,25 +113,25 @@ public class Graph<T> {
     
     
     //returns a list of every optimal path, to every connected node--------------------------------------------------------------
-    public  Map<Node<T>,ArrayList<Node<T>>> dijkstraList(Node<T> pOrigen){
-        Map<Node<T>,Double> distance = new HashMap<>();
-        Map<Node<T>,Node<T>> closest = new HashMap<>();
-        ArrayList<Node<T>> notReady = new ArrayList<>();
+    public  Map<GraphNode<T>,ArrayList<GraphNode<T>>> dijkstraList(GraphNode<T> pOrigen){
+        Map<GraphNode<T>,Double> distance = new HashMap<>();
+        Map<GraphNode<T>,GraphNode<T>> closest = new HashMap<>();
+        ArrayList<GraphNode<T>> notReady = new ArrayList<>();
         //cost of going to a certain node
         distance.put(pOrigen,0.0);
         //nodes that need to be procesed
         notReady.add(pOrigen);
         while(notReady.size() > 0){
             //iterates over not visited nodes in the queue
-                Node<T> node = notReady.get(0);
+                GraphNode<T> node = notReady.get(0);
                 notReady.remove(node);
                 node.setVisited(true);
-                ArrayList<Node<T>> neightbors = node.getPaths();
+                ArrayList<GraphNode<T>> neightbors = node.getPaths();
                 ArrayList<Double> weights = node.getWeights();
                 //iterates over neigthbors
                 for(int i = 0; i < neightbors.size(); i++){
                     
-                    Node<T> actual = neightbors.get(i);
+                    GraphNode<T> actual = neightbors.get(i);
                     double actualDistance = weights.get(i);
                     //System.out.println("."+distance.containsKey(actual));
                     if(!distance.containsKey(actual)){
@@ -156,14 +156,14 @@ public class Graph<T> {
                 notReady.remove(node);
             
         }
-        Map<Node<T>,ArrayList<Node<T>>> result = new HashMap<>();
+        Map<GraphNode<T>,ArrayList<GraphNode<T>>> result = new HashMap<>();
         //we build the answer to the desired format
-        for(Node<T> node: nodes){
+        for(GraphNode<T> node: nodes){
             //we ask if the result contains the node
             if(!result.containsKey(node)){
                 
-                Node<T> actual = node;
-                ArrayList<Node<T>> actualList = new ArrayList<>();
+                GraphNode<T> actual = node;
+                ArrayList<GraphNode<T>> actualList = new ArrayList<>();
                 //build the path in reverse
                 while(actual != pOrigen && actual != null){
                     actualList.add(actual);
@@ -188,7 +188,7 @@ public class Graph<T> {
     
     //set all nodes to unvisited state
     public void reset(){
-        for(Node<T> node : nodes){
+        for(GraphNode<T> node : nodes){
             node.setVisited(false);
         }
         
@@ -196,7 +196,7 @@ public class Graph<T> {
         
     }
 
-    public ArrayList<Node<T>> getNodes() {
+    public ArrayList<GraphNode<T>> getNodes() {
         return nodes;
     }
 
