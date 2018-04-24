@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Code;
+package code;
 
 /**
  *
@@ -12,14 +12,10 @@ package Code;
 public class Timeline {
 
     private int[] Line;
-    /*Timeline*/
     private int maxSpace;
-    /*Lenght of array Line*/
     private int maxByTime;
-    /*Max int by unit of array Line*/
     private TimelineController Controller;
 
-    /*Manage Time*/
     public Timeline(int pMaxSpace, TimelineController pController) {
 
         Line = new int[maxSpace];
@@ -34,7 +30,12 @@ public class Timeline {
     }
 
     public int addElementsToMiliSecond(int pMiliSecond, int elementsCount) {
-        if (pMiliSecond < getactualTime()) {
+        return addElementsToMiliSecond(pMiliSecond,pMiliSecond,getactualTime());
+    }
+
+    public int addElementsToMiliSecond(int pMiliSecond, int elementsCount, int actualTime) {
+        Line[actualTime % maxSpace] = 0;
+        if (pMiliSecond < actualTime) {
             if (elementsCount + Line[pMiliSecond] <= maxByTime) {
                 Line[pMiliSecond] += elementsCount;
                 return 0;
@@ -46,11 +47,28 @@ public class Timeline {
         }
         return elementsCount;
     }
+    
+        public int removeElementsToMiliSecond(int pMiliSecond, int elementsCount) {
+            if(Line[pMiliSecond] == 0){
+                return 0;
+            }
+            else if(Line[pMiliSecond] - elementsCount <= 0){
+                return 0;
+            }
+            else{
+                Line[pMiliSecond]-=elementsCount;
+                return Line[pMiliSecond];
+            }
+        }
 
 
     private int getactualTime() {
         Line[Controller.getActualTime() % maxSpace] = 0;
         return Controller.getActualTime();
+    }
+    
+    public int getFreeSpace(int miliSecond){
+       return 0; 
     }
 
 }
