@@ -3,16 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Logica;
+package controller;
 
-import generic.Grafo;
-import generic.Node;
+import controller.Station;
+import code.Graph;
+import code.GraphNode;
 import helper.MapHelper;
+import helper.RandomDistributedNumber;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.Vector;
 
 /**
  *
@@ -28,71 +31,91 @@ public class MapConstructor {
     //conversion rate
     double KmPerPixel;
     
-    private int nodes;
-    private Grafo<Station> graph;
+    private int pNodes;
+    private Graph<Station> graph;
     
-    public MapConstructor(int width, int height,double pKmPerPixel, int nodes) {
+    public MapConstructor(int width, int height,double pKmPerPixel, int pNodes, int pTrips) {
         this.width = width;
         this.height = height;
-        this.nodes = nodes;
+        this.pNodes = pNodes;
         //a random number generator is created
         Random random = new Random(System.currentTimeMillis());
-        this.graph = new Grafo<Station>();
+        this.graph = new Graph<Station>();
         
-        //the nodes are created for the graph
-        //maybe random needs to be changed so the nodes are distributed better ------------------------------------------------!!!!!
-        for(int i = 0; i < nodes; i++){
+        //the pNodes are created for the graph
+        //maybe random needs to be changed so the pNodes are distributed better ------------------------------------------------!!!!!
+        for(int i = 0; i < pNodes; i++){
             //genera a los nodos a cierta distancia de la orilla
             graph.insertNode(new Station(10+random.nextInt(width-20),10+random.nextInt(height-20)));
         }
         
-        ArrayList<Node<Station>> graphNodes = graph.getNodes();
+        ArrayList<GraphNode<Station>> graphNodes = graph.getNodes();
         //generate the first connection for every node
         List<Integer> numbers = new ArrayList<>();
 
-        for (int i = 0; i < nodes; i++) {
+        for (int i = 0; i < pNodes; i++) {
             numbers.add(i);
         }
         Collections.shuffle(numbers);
         //the list is shufled so every node is conected to other node 
         //without repeating, not exatctly what the Professor wants
-        for(int i =0; i < nodes/2; i++){
-            Node<Station> first = graph.getNode(i);
-            Node<Station> second = graph.getNode(i+1);
-            //the two nodes are connected with the corresponding weight
+        for(int i =0; i < pNodes/2; i++){
+            GraphNode<Station> first = graph.getNode(i);
+            GraphNode<Station> second = graph.getNode(i+1);
+            //the two pNodes are connected with the corresponding weight
             graph.addEdge(first, second, MapHelper.distance(first.getContent(), second.getContent())*pKmPerPixel);
         }
-        //if the is an odd number of nodes, the las random node is connected with the first random node
-        if(nodes%2 != 0){
-            Node<Station> first = graph.getNode(nodes-1);
-            Node<Station> second = graph.getNode(0);
-            //the two nodes are connected with the corresponding weight
+        //if the is an odd number of pNodes, the las random node is connected with the first random node
+        if(pNodes%2 != 0){
+            GraphNode<Station> first = graph.getNode(pNodes-1);
+            GraphNode<Station> second = graph.getNode(0);
+            //the two pNodes are connected with the corresponding weight
             graph.addEdge(first, second, MapHelper.distance(first.getContent(), second.getContent())*pKmPerPixel);
         }
         //second random connection, to the closest node
         //this can be run without the first part, and stil generate two connections for every node
         int connections = 2;
-        for(Node<Station> node : graphNodes){
-            ArrayList<Node<Station>> otherNodes = getClosest(graph, node);
+        for(GraphNode<Station> node : graphNodes){
+            ArrayList<GraphNode<Station>> otherNodes = getClosest(graph, node);
             int index = 0;
             //can be changed to force a connection for every node
             //so some may have more than two connections
             //just change while to for and use connections as goal
             while(node.getPaths().size() < connections){
-                //there are no more nodes to connect with
+                //there are no more pNodes to connect with
                 //System.out.println("...");
                 if(index >= otherNodes.size()) break;
-                Node<Station> other = otherNodes.get(index);
+                GraphNode<Station> other = otherNodes.get(index);
                 graph.addEdge(node, other, MapHelper.distance(node.getContent(), other.getContent()));
                 index++;
             }
         }
         
         //se guarda la lista de caminos optimos dentro de cada nodo
-        for(Node<Station> node : graphNodes){
+        for(GraphNode<Station> node : graphNodes){
             //ejecuta dijkstra para el nodo
             node.getContent().setOptimalRoutes(graph.dijkstraList(node));
         }
+        //amount of drones that have to go in any rout
+        ArrayList<Integer> randomTrips = RandomDistributedNumber.distribute(pNodes*pNodes - pNodes,pTrips,System.currentTimeMillis());
+        
+        //debug
+        /*System.out.println(pTrips + " " + pNodes);
+        for(int i = 0; i < pNodes*pNodes; i++){
+            System.out.println(randomTrips.get(i));
+        }
+        System.out.println("-----");
+        */
+        for(int i = 0; i < pNodes; i++){
+            for(int j = 0; j < pNodes; j++){
+                if(i != j){
+                    //using remove we are actuali taking of the first element of the array
+                    graphNodes.get(i).getContent().setTrips(graphNodes.get(j), randomTrips.remove(0));
+                //System.out.println(randomTrips.remove(0));
+                }
+             }
+        }
+        
         //debug imprime los caminos de un nodo para ver el resultado de dijkstra
         //MapHelper.printOptimalRoutes(graph.dijkstraList(graphNodes.get(1)), graph.getNodes());
     }
@@ -100,17 +123,17 @@ public class MapConstructor {
     
     
     //get the closest node even if it is not connected ----------------------------------------------------------------------------
-    private ArrayList<Node<Station>> getClosest(Grafo pGraph, Node<Station> pNode){
+    private ArrayList<GraphNode<Station>> getClosest(Graph pGraph, GraphNode<Station> pNode){
         ArrayList<Pair> result = new ArrayList<>();
-        ArrayList<Node<Station>> usefullResult = new ArrayList<>();
+        ArrayList<GraphNode<Station>> usefullResult = new ArrayList<>();
         double minDist = Double.MAX_VALUE;
-        ArrayList<Node<Station>> nodes = pGraph.getNodes();
+        ArrayList<GraphNode<Station>> pNodes = pGraph.getNodes();
         //May be optimized
         //Not very important on simulation time, affects map creation time
-        for(Node<Station> comparedNode : nodes){
+        for(GraphNode<Station> comparedNode : pNodes){
   
             if(comparedNode != pNode){
-                //add nodes to the arrayList
+                //add pNodes to the arrayList
                 result.add(new Pair(MapHelper.distance(comparedNode.getContent(), pNode.getContent()),comparedNode));
             }
         }
@@ -122,12 +145,12 @@ public class MapConstructor {
         return usefullResult;
     }
 
-    //helper class to order the array of closest nodes
+    //helper class to order the array of closest pNodes
     private static class Pair implements Comparable<Pair>
     {
     public Double value;
-    public Node<Station> node;
-    public Pair(double pValue,Node<Station> pNode){
+    public GraphNode<Station> node;
+    public Pair(double pValue,GraphNode<Station> pNode){
             node = pNode;
             value = pValue;
     }
@@ -139,15 +162,15 @@ public class MapConstructor {
     //returns an ArrayList with all the stations on the map
     public ArrayList<Station> getStations(){
         ArrayList<Station> stations = new ArrayList<Station>();
-        ArrayList<Node<Station>> nodes = graph.getNodes();
-        for(Node<Station> node: nodes){
+        ArrayList<GraphNode<Station>> nodes = graph.getNodes();
+        for(GraphNode<Station> node: nodes){
             stations.add(node.getContent());
         }
         
         return stations;
     }
     
-    public ArrayList<Node<Station>> getNodes(){
+    public ArrayList<GraphNode<Station>> getNodes(){
 
          return graph.getNodes();
       
