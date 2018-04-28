@@ -46,7 +46,7 @@ public class MapConstructor {
         //maybe random needs to be changed so the pNodes are distributed better ------------------------------------------------!!!!!
         for(int i = 0; i < pNodes; i++){
             //genera a los nodos a cierta distancia de la orilla
-            graph.insertNode(new Station(10+random.nextInt(width-20),10+random.nextInt(height-20)));
+            graph.insertNode(new Station(10+random.nextInt(width-20),10+random.nextInt(height-20),i));
         }
         
         ArrayList<GraphNode<Station>> graphNodes = graph.getNodes();

@@ -30,6 +30,12 @@ public class Timeline {
         Line = new BitSet(pMaxSpace);
         maxSpace = pMaxSpace;
     }
+    
+    public Timeline(int pMaxSpace) {
+
+        Line = new BitSet(pMaxSpace);
+        maxSpace = pMaxSpace;
+    }
 
     /**
      * returns if a block is full

@@ -42,8 +42,11 @@ public class Controller {
         
         Station[] Stations = genStations(500,500,stationCount);
         Graph<Station> GraphMap = new Graph();
-        for(Station thisStation : Stations){
-            GraphMap.insertNode(thisStation);
+        
+        //asign id station
+        for(int i = 0; i < Stations.length; i++){
+            Stations[i].setId(i);
+            GraphMap.insertNode(Stations[i]);
         }
         
         /*for each Station
