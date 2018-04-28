@@ -164,6 +164,14 @@ public class Station {
         System.out.println("|");
     
     }
+    
+    public int getNextFreeTimeIn(){
+        return LineIn.getNext();
+    }
+    
+    public int getNextFreeTimeIn(int pBlockSize){
+        return LineIn.getNext()*pBlockSize;
+    }
 
     
 }

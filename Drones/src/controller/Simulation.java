@@ -50,7 +50,7 @@ public class Simulation {
         Simulation.setMsBlockSize(60);
         
         
-        Station[] Stations = genStations(6,6,stationCount, SimulationTime/Simulation.getMsBlockSize() +10);
+        Station[] Stations = genStations(6,6,stationCount, SimulationTime/Simulation.getMsBlockSize() + 10);
         Graph<Station> GraphMap = new Graph();
         
         //assign stations to graph
@@ -63,13 +63,17 @@ public class Simulation {
         MapConstructor.createRandomConnections(GraphMap, stationCount, 2);
         MapConstructor.setOptimalRoutes(GraphMap);
         
-        Backtracking bc = new Backtracking();
+        /*Backtracking bc = new Backtracking();
         long iniTime = System.currentTimeMillis();
-        bc.solve(Simulation.getBlockSize(), GraphMap, droneCount, stationCount, droneCount,Simulation.getMsBlockSize());
+        bc.solve(Simulation.getBlockSize(), GraphMap, droneCount, stationCount, SimulationTime,Simulation.getMsBlockSize());
         //System.out.println("Solved!");
         
         System.out.println("Tiempo utilizado = " + (System.currentTimeMillis() - iniTime) + "ms");
-
+        */
+        long iniTime = System.currentTimeMillis();
+        Probabilistic pb = new Probabilistic();
+        pb.solve(Simulation.getBlockSize(), GraphMap, droneCount, stationCount, SimulationTime,Simulation.getMsBlockSize());
+        System.out.println("Tiempo utilizado = " + (System.currentTimeMillis() - iniTime) + "ms");
         /*for(GraphNode<Station> st : GraphMap.getNodes()){
         st.getContent().printTimelineIn();
         }*/
