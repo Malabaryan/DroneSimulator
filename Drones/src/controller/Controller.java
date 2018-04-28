@@ -74,19 +74,19 @@ public class Controller {
             indexStation = rand.nextInt(stationCount);
             Route = thisStation.getOptimalRoutes().get(GraphMap.getNode(indexStation));
             dronesSent = rand.nextInt(dronesByTrack) + 1;
-            setTimes(thisStation,Route,dronesSent);
+            //setTimes(thisStation,Route,dronesSent);
             DronesCount -= dronesSent;
             
         }
     }
     
-    private int setTimes(Station pthisStation, ArrayList<GraphNode<Station>> Route, int Drones){
+    /*private int setTimes(Station pthisStation, ArrayList<GraphNode<Station>> Route, int Drones){
         
         double distance;
         Station thisStation = pthisStation;
         for(GraphNode<Station> StationOfRoute : Route){
                 distance = Math.sqrt(Math.pow(StationOfRoute.getContent().getX() - thisStation.getX(),2) 
-                + Math.pow(StationOfRoute.getContent().getY() - thisStation.getY(),2)) * 1000;  /*Formule to find distance between two points*/
+                + Math.pow(StationOfRoute.getContent().getY() - thisStation.getY(),2)) * 1000;  //Formule to find distance between two points
             
                 StationOfRoute.getContent().getLineIn().addElementsToMiliSecond(
                         (int)(TimeControl.getActualTime() + distance/120), Drones);
@@ -95,7 +95,7 @@ public class Controller {
                 thisStation = StationOfRoute.getContent();
             }
         return 0;
-    }
+    }*/
     
     public static void main(String[] args) {
         

@@ -119,11 +119,75 @@ public class MapConstructor {
         //debug imprime los caminos de un nodo para ver el resultado de dijkstra
         //MapHelper.printOptimalRoutes(graph.dijkstraList(graphNodes.get(1)), graph.getNodes());
     }
+    /*Bitset Timeline
+travelTime en mapHelper
+un poco de javadoc*/
+    
+    /**
+     * Crea connecines aleatorias entre todos los nodos del grafo segun sea necesario
+     * @param graph
+     * @param pNodes
+     * @param pTrips 
+     */
+    public static void createRandomConnections(Graph graph, int pNodes, int pConnectionsPerNode){
+    ArrayList<GraphNode<Station>> graphNodes = graph.getNodes();
+        //generate the first connection for every node
+        List<Integer> numbers = new ArrayList<>();
+
+        for (int i = 0; i < pNodes; i++) {
+            numbers.add(i);
+        }
+        Collections.shuffle(numbers);
+        //the list is shufled so every node is conected to other node 
+        //without repeating, not exatctly what the Professor wants
+        for(int i =0; i < pNodes/2; i++){
+            GraphNode<Station> first = graph.getNode(i);
+            GraphNode<Station> second = graph.getNode(i+1);
+            //the two pNodes are connected with the corresponding weight
+            graph.addEdge(first, second, MapHelper.distance(first.getContent(), second.getContent()));
+        }
+        //if the is an odd number of pNodes, the las random node is connected with the first random node
+        if(pNodes%2 != 0){
+            GraphNode<Station> first = graph.getNode(pNodes-1);
+            GraphNode<Station> second = graph.getNode(0);
+            //the two pNodes are connected with the corresponding weight
+            graph.addEdge(first, second, MapHelper.distance(first.getContent(), second.getContent()));
+        }
+        //second random connection, to the closest node
+        //this can be run without the first part, and stil generate two connections for every node
+        for(GraphNode<Station> node : graphNodes){
+            ArrayList<GraphNode<Station>> otherNodes = getClosest(graph, node);
+            int index = 0;
+            //can be changed to force a connection for every node
+            //so some may have more than two connections
+            //just change while to for and use connections as goal
+            while(node.getPaths().size() < pConnectionsPerNode){
+                //there are no more pNodes to connect with
+                //System.out.println("...");
+                if(index >= otherNodes.size()) break;
+                GraphNode<Station> other = otherNodes.get(index);
+                graph.addEdge(node, other, MapHelper.distance(node.getContent(), other.getContent()));
+                index++;
+            }
+        }
+        
+        //se guarda la lista de caminos optimos dentro de cada nodo
+        for(GraphNode<Station> node : graphNodes){
+            //ejecuta dijkstra para el nodo
+            node.getContent().setOptimalRoutes(graph.dijkstraList(node));
+        }
+    
+    }
+    
+    
+    
+    
+    
     
     
     
     //get the closest node even if it is not connected ----------------------------------------------------------------------------
-    private ArrayList<GraphNode<Station>> getClosest(Graph pGraph, GraphNode<Station> pNode){
+    private static ArrayList<GraphNode<Station>> getClosest(Graph pGraph, GraphNode<Station> pNode){
         ArrayList<Pair> result = new ArrayList<>();
         ArrayList<GraphNode<Station>> usefullResult = new ArrayList<>();
         double minDist = Double.MAX_VALUE;
