@@ -57,6 +57,16 @@ public class Timeline {
                 return true;
             }
     }
+    /**
+     * Frees up a space on the timeline
+     * 
+     * @param pMiliSecond 
+     */
+    public void retireTimeBlock(int pMiliSecond) {
+           int index = (int)Math.floor(pMiliSecond/blockSize);
+            Line.set(maxByTime,false);
+                
+    }
 
 
 
