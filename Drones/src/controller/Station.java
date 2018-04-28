@@ -26,12 +26,15 @@ public class Station {
     private Map<code.GraphNode<Station>,Integer> costs;
     
     private int[] trips;
+    private int id;
+    
     
     public Station() {
         this.x = 0;
         this.y = 0;
         remainingTrips = new HashMap<GraphNode<Station>,Integer>();
-        
+        LineIn = new Timeline(100000);
+        LineOut = new Timeline(100000);
     }
 
     public Station(int x, int y) {
@@ -41,12 +44,40 @@ public class Station {
 
     }
     
-    public Station(int pX, int pY, int pTotalNodos) {
-        this.x = pX;
-        this.y = pY;
+    public Station(int x, int y, int id) {
+        this.x = x;
+        this.y = y;
         remainingTrips = new HashMap<GraphNode<Station>,Integer>();
-        
-        
+        this.id = id;
+    }
+    /**
+     * Reserve space for incoming drones
+     * @param timestamp milisecond
+     */
+    public boolean reserveIn(int timestamp){
+        return LineIn.reserveTimeBlock(timestamp);
+    }
+    /**
+     * free space for incoming drones
+     * @param timestamp milisecond
+     */
+    public void freeIn(int timestamp){
+        LineIn.retireTimeBlock(timestamp);
+    }
+    
+    /**
+     * reserve space for starting starting drones
+     * @param timestamp milisecond
+     */
+    public boolean reserveOut(int timestamp){
+        return LineOut.reserveTimeBlock(timestamp);
+    }
+    /**
+     * reserve space for starting starting drones
+     * @param timestamp milisecond
+     */
+    public void freeOut(int timestamp){
+        LineOut.retireTimeBlock(timestamp);
     }
     
     //getters and setters- ------------------------------------------------
@@ -81,6 +112,7 @@ public class Station {
     public void setLineIn(Timeline LineIn) {
         this.LineIn = LineIn;
     }
+    
 
     public Timeline getLineOut() {
         return LineOut;
@@ -92,6 +124,14 @@ public class Station {
 
     public void setTrips(GraphNode pTarget, int pAmount){
         remainingTrips.put(pTarget, pAmount);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
     
 
