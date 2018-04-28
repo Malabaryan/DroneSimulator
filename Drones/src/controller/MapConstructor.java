@@ -172,13 +172,24 @@ un poco de javadoc*/
         }
         
         //se guarda la lista de caminos optimos dentro de cada nodo
-        for(GraphNode<Station> node : graphNodes){
+        /*for(GraphNode<Station> node : graphNodes){
             //ejecuta dijkstra para el nodo
             node.getContent().setOptimalRoutes(graph.dijkstraList(node));
+        }*/
+    
+    }
+    /**
+     * Calculates dijkstra for every node
+     * @param pGraph 
+     */
+    public static void setOptimalRoutes(Graph<Station> pGraph){
+        ArrayList<GraphNode<Station>> graphNodes = pGraph.getNodes();
+        for(GraphNode<Station> node : graphNodes){
+            //ejecuta dijkstra para el nodo
+            node.getContent().setOptimalRoutes(pGraph.dijkstraList(node));
         }
     
     }
-    
     
     
     

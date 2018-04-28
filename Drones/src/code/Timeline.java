@@ -5,6 +5,7 @@
  */
 package code;
 
+import controller.Simulation;
 import java.util.BitSet;
 
 /**
@@ -29,12 +30,14 @@ public class Timeline {
 
         Line = new BitSet(pMaxSpace);
         maxSpace = pMaxSpace;
+        blockSize = Simulation.getMsBlockSize();
     }
     
     public Timeline(int pMaxSpace) {
 
         Line = new BitSet(pMaxSpace);
         maxSpace = pMaxSpace;
+        blockSize = Simulation.getMsBlockSize();
     }
 
     /**
@@ -53,13 +56,13 @@ public class Timeline {
      * @return if the selection was sucesfull
      */
     public boolean reserveTimeBlock(int pMiliSecond) {
-           int index = (int)Math.floor(pMiliSecond/blockSize);
-        
+            int index = (int)Math.floor(pMiliSecond/blockSize);
+            //System.out.println(index + ", " + blockSize);
             if (Line.get(index)) {
                 
                 return false;
             } else {
-                Line.set(maxByTime);
+                Line.set(index,true);
                 return true;
             }
     }
@@ -70,10 +73,27 @@ public class Timeline {
      */
     public void retireTimeBlock(int pMiliSecond) {
            int index = (int)Math.floor(pMiliSecond/blockSize);
-            Line.set(maxByTime,false);
+            Line.set(index,false);
                 
     }
 
+    public BitSet getLine() {
+        return Line;
+    }
+
+    public void setLine(BitSet Line) {
+        this.Line = Line;
+    }
+
+    public int getMaxSpace() {
+        return maxSpace;
+    }
+
+    public int getBlockSize() {
+        return blockSize;
+    }
+
+    
 
 
 
