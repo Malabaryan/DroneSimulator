@@ -47,7 +47,7 @@ public class Probabilistic extends SolutionAlgorithm{
 
 
             //create a new path to try
-            
+            ArrayList<Integer> possiblePaths;
             //try to make a path of size randomPathSize
             //dont worry if u cant, u are a good algorithm
             //you did your best
@@ -55,19 +55,31 @@ public class Probabilistic extends SolutionAlgorithm{
             //get next free block and reserve
             int nextFreeTime = targetNode.getContent().getNextFreeTimeIn(blockSize);
             acumulatedTime = 0;
-            targetNode.getContent().reserveIn(nextFreeTime);
+            targetNode.getContent().reserveInIgnore(nextFreeTime);
             pathSize = 1;
             //generate as much paths as posible
             while(acumulatedTime  + nextFreeTime <= simulationTime){
                 sourceNode = targetNode;
+                sourceNode.setVisited(true);
                 
                 neighbors = sourceNode.getPaths();
-                targetNode = neighbors.get(random.nextInt(neighbors.size()-1));
+                possiblePaths = shuffledList(neighbors.size()-1);
+                //iterate throught neighbors until there is no other neightbor to visit
+                targetNode = neighbors.get(possiblePaths.remove(0));
+                while(targetNode == sourceNode){
+                    targetNode = neighbors.get(possiblePaths.remove(0));
+                    if(possiblePaths.size() < 1){ 
+                    break;
+                }
+                }
+                
+                
+                
                 
                 //System.out.println(nextFreeTime + acumulatedTime + "time : " + simulationTime);
                 acumulatedTime += MapHelper.travelTime(targetNode, sourceNode);
                 //if it cannot conect to other neighbor it ends the path
-                if(!targetNode.getContent().reserveIn(nextFreeTime + acumulatedTime)){
+                if(!targetNode.getContent().reserveIn(nextFreeTime + acumulatedTime) || targetNode.isVisited()){
                     GraphMap.reset();
                     //DESTROY PATH IF ITS OF SIZE 1
                     if(pathSize < 2){
@@ -76,15 +88,21 @@ public class Probabilistic extends SolutionAlgorithm{
                     }else{
                         if(pathSize > 5)
                         System.out.println(pathSize);
+                        total += blockSize;
                     }
                     //reserve departing trip
                     nextFreeTime = targetNode.getContent().getNextFreeTimeIn(blockSize);
                     targetNode.getContent().reserveIn(nextFreeTime + acumulatedTime);
                     pathSize = 0;
+                    GraphMap.reset();
                     
                 }
                 pathSize++;
                 
+            }
+            if(pathSize > 1){
+                System.out.println(pathSize);
+                total += blockSize;
             }
             
             
@@ -94,6 +112,62 @@ public class Probabilistic extends SolutionAlgorithm{
         
         
         
+    }
+    
+    public void solve2(int dronesByBlock, Graph<Station> GraphMap, int DronesCount, int stationCount, int simulationTime, int blockSize) {
+        int total = 0;
+        
+        GraphNode<Station> sourceNode, targetNode;
+        Random random = new Random();
+         ArrayList<GraphNode<Station>> neighbors;
+         ArrayList<Integer> possiblePaths;
+        while(total < DronesCount){
+            //try to make a path of size randomPathSize
+            //dont worry if u cant, u are a good algorithm
+            //you did your best
+            targetNode = GraphMap.getNode(random.nextInt(stationCount-1));
+            int actualTime = targetNode.getContent().getNextFreeTimeIn();
+            //always move a step forward, so the algorithm does not gets stuck
+            targetNode.getContent().reserveInIgnore(actualTime);
+            int acumulatedTime = 0;
+            int pathSize = 1;
+            while(actualTime + acumulatedTime < simulationTime){
+                sourceNode = targetNode;
+                targetNode.setVisited(true);
+                //sourceNode.setVisited(true);
+                neighbors = sourceNode.getPaths();
+                possiblePaths = shuffledList(neighbors.size()-1);
+                //iterate throught neighbors until there is no other neightbor to visit
+                 targetNode = neighbors.get(possiblePaths.remove(0));
+                while(possiblePaths.size() > 0 && targetNode.isVisited()){
+                    targetNode = neighbors.get(possiblePaths.remove(0));
+                }
+                
+                //System.out.println(nextFreeTime + acumulatedTime + "time : " + simulationTime);
+                acumulatedTime += MapHelper.travelTime(targetNode, sourceNode);
+                if(targetNode.isVisited() || !targetNode.getContent().reserveIn(actualTime+ acumulatedTime)){
+                    GraphMap.reset();
+                    if(pathSize < 2){
+                        targetNode.getContent().freeIn(acumulatedTime + acumulatedTime - MapHelper.travelTime(targetNode, sourceNode));
+                        
+                    }else{
+                        //System.out.println(pathSize);
+                        total += dronesByBlock;
+                    }
+                    targetNode.getContent().reserveIn(targetNode.getContent().getNextFreeTimeIn(blockSize));
+                    
+                    
+                    pathSize = 1;
+                }
+                
+                
+                pathSize++;
+                
+                //System.out.println(acumulatedTime);
+            }   
+        }
+    
+    
     }
     
     

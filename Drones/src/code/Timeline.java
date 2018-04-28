@@ -76,6 +76,25 @@ public class Timeline {
                 return true;
             }
     }
+    
+    public boolean reserveTimeBlockIgnore(int pMiliSecond) {
+            int index = (int)Math.floor(pMiliSecond/blockSize);
+            //move pointer
+        
+                while(Line.get(lowPointer)){
+                    lowPointer++;
+                }
+            
+
+            //System.out.println(index + ", " + blockSize);
+            if (Line.get(index)) {
+                
+                return false;
+            } else {
+                Line.set(index,true);
+                return true;
+            }
+    }
     /**
      * Frees up a space on the timeline
      * 
