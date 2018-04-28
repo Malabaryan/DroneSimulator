@@ -26,6 +26,7 @@ public class Controller {
    
     
     public static void main(String[] args) {
-        Simulation.runSimulation(1000, 4, 100000, 50000000, 30, 2);
+        Simulation.runSimulation(1000, 4, 10000000, 50000000, 30, 3, AlgorithmType.Probabilistic);
+        Simulation.runSimulation(1000, 4, 10000000, 50000000, 30, 3, AlgorithmType.Backtracking);
     }
 }

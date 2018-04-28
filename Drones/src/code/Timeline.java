@@ -22,6 +22,8 @@ public class Timeline {
     /*Max int by unit of array Line*/
     private TimelineController Controller;
     
+    private int lowPointer = 0;
+    
     //minimun amount of time that can be reserved
     private int blockSize = 90;
 
@@ -57,6 +59,33 @@ public class Timeline {
      */
     public boolean reserveTimeBlock(int pMiliSecond) {
             int index = (int)Math.floor(pMiliSecond/blockSize);
+            //move pointer
+            if(lowPointer == index){
+                //move pointer to next empty spot
+                while(Line.get(lowPointer)){
+                    lowPointer++;
+                }
+            }
+
+            //System.out.println(index + ", " + blockSize);
+            if (Line.get(index)) {
+                
+                return false;
+            } else {
+                Line.set(index,true);
+                return true;
+            }
+    }
+    
+    public boolean reserveTimeBlockIgnore(int pMiliSecond) {
+            int index = (int)Math.floor(pMiliSecond/blockSize);
+            //move pointer
+        
+                while(Line.get(lowPointer)){
+                    lowPointer++;
+                }
+            
+
             //System.out.println(index + ", " + blockSize);
             if (Line.get(index)) {
                 
@@ -73,7 +102,12 @@ public class Timeline {
      */
     public void retireTimeBlock(int pMiliSecond) {
            int index = (int)Math.floor(pMiliSecond/blockSize);
-            Line.set(index,false);
+           Line.set(index,false);
+           //move pointer
+            if(lowPointer > index){
+                lowPointer = index;
+            } 
+            
                 
     }
 
@@ -92,7 +126,17 @@ public class Timeline {
     public int getBlockSize() {
         return blockSize;
     }
-
+    
+    /**
+     * return index of next free spot
+     * @return 
+     */
+    public int getNext(){
+        return lowPointer;
+    }
+     public int getNext(int blockSize){
+        return lowPointer*blockSize;
+    }
     
 
 

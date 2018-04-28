@@ -72,6 +72,10 @@ public class Station {
     public boolean reserveIn(int timestamp){
         return LineIn.reserveTimeBlock(timestamp);
     }
+    
+    public boolean reserveInIgnore(int timestamp){
+        return LineIn.reserveTimeBlockIgnore(timestamp);
+    }
     /**
      * free space for incoming drones
      * @param timestamp milisecond
@@ -163,6 +167,14 @@ public class Station {
         }
         System.out.println("|");
     
+    }
+    
+    public int getNextFreeTimeIn(){
+        return LineIn.getNext();
+    }
+    
+    public int getNextFreeTimeIn(int pBlockSize){
+        return LineIn.getNext()*pBlockSize;
     }
 
     
