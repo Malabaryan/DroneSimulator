@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Code;
+package code;
+
+import java.util.BitSet;
 
 /**
  *
@@ -11,46 +13,52 @@ package Code;
  */
 public class Timeline {
 
-    private int[] Line;
+    private BitSet Line;
     /*Timeline*/
     private int maxSpace;
     /*Lenght of array Line*/
     private int maxByTime;
     /*Max int by unit of array Line*/
     private TimelineController Controller;
+    
+    //minimun amount of time that can be reserved
+    private int blockSize = 90;
 
     /*Manage Time*/
     public Timeline(int pMaxSpace, TimelineController pController) {
 
-        Line = new int[maxSpace];
+        Line = new BitSet(pMaxSpace);
         maxSpace = pMaxSpace;
     }
 
+    /**
+     * returns if a block is full
+     * @param pMiliSecond
+     * @return 
+     */
     private boolean miliSecondIsFull(int pMiliSecond) {
-        if (Line[pMiliSecond] >= maxByTime) {
-            return true;
-        }
-        return false;
+        int index = (int)Math.floor(pMiliSecond/blockSize);
+        return Line.get(index);
     }
-
-    public int addElementsToMiliSecond(int pMiliSecond, int elementsCount) {
-        if (pMiliSecond < getactualTime()) {
-            if (elementsCount + Line[pMiliSecond] <= maxByTime) {
-                Line[pMiliSecond] += elementsCount;
-                return 0;
+    
+    /**
+     * reserves a block in the timeline  return false if its full
+     * @param pMiliSecond   target milisecond to reserver
+     * @return if the selection was sucesfull
+     */
+    public boolean reserveTimeBlock(int pMiliSecond) {
+           int index = (int)Math.floor(pMiliSecond/blockSize);
+        
+            if (Line.get(index)) {
+                
+                return false;
             } else {
-                elementsCount+= Line[pMiliSecond];      /*this line is used by the return*/
-                Line[pMiliSecond] = maxByTime;
-                return elementsCount - maxByTime;
+                Line.set(maxByTime);
+                return true;
             }
-        }
-        return elementsCount;
     }
 
 
-    private int getactualTime() {
-        Line[Controller.getActualTime() % maxSpace] = 0;
-        return Controller.getActualTime();
-    }
+
 
 }
