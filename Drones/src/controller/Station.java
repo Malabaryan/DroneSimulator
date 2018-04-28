@@ -8,6 +8,7 @@ package controller;
 import code.GraphNode;
 import code.Timeline;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,14 +34,16 @@ public class Station {
         this.x = 0;
         this.y = 0;
         remainingTrips = new HashMap<GraphNode<Station>,Integer>();
-        LineIn = new Timeline(100000);
-        LineOut = new Timeline(100000);
+        LineIn = new Timeline(1000000);
+        LineOut = new Timeline(1000000);
     }
 
     public Station(int x, int y) {
         this.x = x;
         this.y = y;
         remainingTrips = new HashMap<GraphNode<Station>,Integer>();
+        LineIn = new Timeline(1000000);
+        LineOut = new Timeline(1000000);
 
     }
     
@@ -49,7 +52,19 @@ public class Station {
         this.y = y;
         remainingTrips = new HashMap<GraphNode<Station>,Integer>();
         this.id = id;
+        LineIn = new Timeline(1000000);
+        LineOut = new Timeline(1000000);
     }
+    
+    public Station(int x, int y, int id, int timelineSize) {
+        this.x = x;
+        this.y = y;
+        remainingTrips = new HashMap<GraphNode<Station>,Integer>();
+        this.id = id;
+        LineIn = new Timeline(timelineSize);
+        LineOut = new Timeline(timelineSize);
+    }
+    
     /**
      * Reserve space for incoming drones
      * @param timestamp milisecond
@@ -134,6 +149,21 @@ public class Station {
         this.id = id;
     }
     
+    public void printTimelineIn(){
+        BitSet line = LineIn.getLine();
+        System.out.println(LineIn.getMaxSpace() + ", " + line.size());
+        for(int i = 0; i < line.size(); i++){
+            if(i %100 == 0) System.out.println("|" + Simulation.getMsBlockSize()*i);
+            if(line.get(i) == true){
+                System.out.print("1");
+            }else{
+                System.out.print("0");
+            }
+            
+        }
+        System.out.println("|");
+    
+    }
 
     
 }

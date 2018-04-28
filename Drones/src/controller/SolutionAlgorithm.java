@@ -14,5 +14,5 @@ import code.Graph;
 public abstract class SolutionAlgorithm {
     
     
-    abstract void solve(int dronesByTrack, Graph<Station> GraphMap, int DronesCount, int stationCount,int simulationTime);
+    public abstract void solve(int dronesByBlock, Graph<Station> GraphMap, int DronesCount, int stationCount,int simulationTime, int blockSize);
 }

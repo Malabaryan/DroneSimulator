@@ -16,33 +16,35 @@ import java.util.Random;
  * @author Carlos
  */
 public class Backtracking extends SolutionAlgorithm{
-    
-    
-    
-    
-    public static void backtracking(int dronesByTrack, Graph<Station> GraphMap, int DronesCount, int stationCount,int simulationTime){
-       
-       
+
+    public Backtracking() {
     }
+    
+    
+    
 
     @Override
-    void solve(int dronesByTrack, Graph<Station> GraphMap, int DronesCount, int stationCount, int simulationTime) {
-       // index to headIndex and currentIndex
+    public void solve(int dronesByTrack, Graph<Station> GraphMap, int DronesCount, int stationCount, int simulationTime, int blockSize) {
+       
+        //System.out.println("controller.Backtracking.solve()");
+        // index to headIndex and currentIndex
        int headIndex = 0;
        int currentIndex = 0 ;
        //size of the minimun size  in timeline
-       int bloque = 90;
+       int bloque = blockSize;
        int total = 0;
        //currentIndex ms of simulation
        int timestamp = 0;
        
        ArrayList<Integer> pila = new ArrayList<>();
+       ArrayList<Integer> timePila = new ArrayList<>();
        ArrayList<Integer> headPila = new ArrayList<>();
        GraphNode<Station> actual, target, previous;
        Random random = new Random(System.currentTimeMillis());
        ArrayList<GraphNode<Station>> path;
        
        while(total < DronesCount){
+           //System.err.println(total);
            actual = GraphMap.getNode(currentIndex);
            int index = random.nextInt(stationCount);
            //solucion temporal
@@ -52,24 +54,54 @@ public class Backtracking extends SolutionAlgorithm{
            
            //inserts currentIndex element on the pila
            pila.add(currentIndex);
-           headPila.add(currentIndex);
+           //headPila.add(currentIndex);
            
            //we traverse the path
            previous = actual;
+           actual.getContent().reserveIn(timestamp);
+           int acumulatedTime = 0;
            for(GraphNode<Station> node : path){
-               int Time = MapHelper.travelTime(previous, node);
+               acumulatedTime += MapHelper.travelTime(previous, node);
+               
                //try to reserve space
-               if(node.getContent().reserveIn(timestamp + Time)){
+               if(node.getContent().reserveIn(timestamp + acumulatedTime) && timestamp + acumulatedTime < simulationTime){
                    pila.add(node.getContent().getId());
+                   timePila.add(acumulatedTime);
                }else{
-                   //there is no avaiable space
-                   
+                   //there is no avaiable space undo last trip
+                   //System.out.println("Rejected: " + actual.getContent().getId() + ", " + target.getContent().getId() );
+                   actual.getContent().freeIn(timestamp);
+                   while(pila.get(pila.size()-1) != actual.getContent().getId()){
+                       //get last element of pila
+                       GraphNode<Station> st = GraphMap.getNode( pila.remove(pila.size()-1));
+                       //get last time of timePila
+                       acumulatedTime = timePila.get(timePila.size() -1);
+                       
+                       st.getContent().freeIn(timestamp + acumulatedTime);
+                   }
                }
                
-               
+               if(node == target){
+                   total += dronesByTrack;
+                   //System.out.println("Accepted: " + actual.getContent().getId() + ", " + target.getContent().getId() );
+                   break;
+               }
                previous = node;
            }
            
+           //free memory from pila
+           pila.clear();
+           timePila.clear();
+           
+           //stop condition
+           if(total >= DronesCount) {
+               
+               break;
+            }
+           if(timestamp > simulationTime){
+               System.out.println("Could not acomodate all drones :(");
+               break;
+           }
            
            currentIndex = (currentIndex+1)%stationCount;
            //if we traversed throught all nodes go to next block
@@ -80,7 +112,7 @@ public class Backtracking extends SolutionAlgorithm{
        
     }
     
-    
+
 
     
  
