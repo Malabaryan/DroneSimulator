@@ -10,16 +10,14 @@ import java.util.BitSet;
 
 /**
  *
- * @author DilanHO
+ * @author Carlos, Bryan, Edgerik
  */
 public class Timeline {
 
     private BitSet Line;
     /*Timeline*/
     private int maxSpace;
-    /*Lenght of array Line*/
     private int maxByTime;
-    /*Max int by unit of array Line*/
     private TimelineController Controller;
     
     private int lowPointer = 0;
@@ -27,7 +25,6 @@ public class Timeline {
     //minimun amount of time that can be reserved
     private int blockSize = 90;
 
-    /*Manage Time*/
     public Timeline(int pMaxSpace, TimelineController pController) {
 
         Line = new BitSet(pMaxSpace);
@@ -71,6 +68,7 @@ public class Timeline {
             if (Line.get(index)) {
                 
                 return false;
+
             } else {
                 Line.set(index,true);
                 return true;
@@ -85,6 +83,7 @@ public class Timeline {
                     lowPointer++;
                 }
             
+
 
             //System.out.println(index + ", " + blockSize);
             if (Line.get(index)) {
@@ -113,6 +112,10 @@ public class Timeline {
 
     public BitSet getLine() {
         return Line;
+    }
+    
+    public int getFreeSpace(int miliSecond){
+       return 0; 
     }
 
     public void setLine(BitSet Line) {

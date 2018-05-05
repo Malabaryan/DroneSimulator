@@ -25,8 +25,6 @@ import javafx.stage.Stage;
 public class Controller{
     
      
- 
-    
     public static void main(String[] args) {
         //Simulation.runSimulation(1000, 4, 1000000, 1000000000, 30, 3, AlgorithmType.Probabilistic);
         Simulation.CreateMap(1000, 4, 1000000, 1000000000, 30, 3,500,500);
@@ -34,9 +32,7 @@ public class Controller{
         System.out.println("Time:" + Simulation.runSimulation(AlgorithmType.Backtracking));
         int size = 3;
 
-    }
 
-        
-    
+    }
 
 }
