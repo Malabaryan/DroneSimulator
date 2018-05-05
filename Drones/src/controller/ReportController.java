@@ -10,7 +10,7 @@ package controller;
  * @author Carlos
  */
 public class ReportController {
-    private Report[][] reports;
+    private Report[] reports;
     int realtime;
     int totalTime;
     int pointer;
@@ -25,7 +25,7 @@ public class ReportController {
         
         
         totalFrames = (int)(realTime/33.3333333 + 100);
-        reports = new Report[nodos][realTime];
+        reports = new Report[totalFrames];
     }
     
     /**
@@ -36,20 +36,34 @@ public class ReportController {
      * @param amout 
      */
     public void addDrones(int nodoFuente,int nodoDestino, int timestamp,int amout){
-        
+        int targetFrame = timestamp /totalTime*totalFrames;
+        if(targetFrame < totalFrames){
+            reports[targetFrame].addTrips(nodoFuente, nodoDestino, amout);
+        }
+    }
+    
+    public void setTotalDrones( int timestamp,int amout){
+        int targetFrame = timestamp /totalTime*totalFrames;
+        if(targetFrame < totalFrames){
+            reports[targetFrame].setDronesEnviados(amout);
+        }
     }
     
     public static ReportController getInstance(){
         return instance;
     } 
     
-    public Report getReport(int nodo){
-        return reports[nodo][pointer];
+    public Report getReport(){
+        return reports[pointer];
         
     }
     
     public void incrementFrame(){
-        if(totalFrames > pointer) pointer++;if(totalFrames > pointer) pointer++;
+        if(totalFrames > pointer){ 
+            pointer++;
+        }else{
+            this.newAnimation = false;
+        }
     }
     
     public boolean finished(){
@@ -58,11 +72,14 @@ public class ReportController {
     public boolean getNewAnimation() {
         return newAnimation;
     }
-
+    
     public void setNewAnimation(boolean newAnimation) {
         this.newAnimation = newAnimation;
     }
-    
+
+    public void setPointer(int pointer) {
+        this.pointer = pointer;
+    }
     
     
     

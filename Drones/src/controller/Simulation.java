@@ -20,7 +20,11 @@ public class Simulation {
     private static TimelineController TimeControl;
     private static int blockSize;//in drones
     private static int msBlockSize;//in ms
-    private static Station[] genStations(int weightMap, int heightMap, int stationCount, int pTimelineSize ){
+    private static int simulationTime;
+    private static int droneCount;
+    private static int stationCount;
+    private static Graph<Station>  GraphMap;
+    private static Station[] genStations(int weightMap, int heightMap, int stationCount, int pTimelineSize){
         int sizeOfMatrix = 6;
         Random rand = new Random(System.currentTimeMillis());
         Station[] Stations = new Station[stationCount];
@@ -36,22 +40,16 @@ public class Simulation {
         }
         return Stations;
     }
-    /**
-     * Solves the simulation
-     * @param HeightTrack heigth of every track in meters
-     * @param WidthTrack widht of track in meters
-     * @param SimulationTime time in miliseconds
-     * @param droneCount drones that need to fly
-     * @param stationCount stations that need to be created
-     * @param tracksByStation minimun conections per station
-     */
-    public static void runSimulation(int HeightTrack, int WidthTrack, int SimulationTime, int droneCount, int stationCount, int tracksByStation,  AlgorithmType type){
+    
+    public static Graph<Station> CreateMap(int HeightTrack, int WidthTrack, int SimulationTime, int pDroneCount, int pStationCount, int tracksByStation, int mapWidth, int mapHeight){
         Simulation.setBlockSize( WidthTrack/2 * HeightTrack/3);
         Simulation.setMsBlockSize(60);
         
-        
-        Station[] Stations = genStations(6,6,stationCount, SimulationTime/Simulation.getMsBlockSize() + 10);
-        Graph<Station> GraphMap = new Graph();
+        simulationTime = SimulationTime;
+        droneCount = pDroneCount;
+        stationCount = pStationCount;
+        Station[] Stations = genStations(mapWidth,mapHeight,stationCount, SimulationTime/Simulation.getMsBlockSize() + 10);
+        GraphMap = new Graph();
         
         //assign stations to graph
         for(Station station : Stations){
@@ -62,6 +60,19 @@ public class Simulation {
                 set Edges*/
         MapConstructor.createRandomConnections(GraphMap, stationCount, tracksByStation);
         MapConstructor.setOptimalRoutes(GraphMap);
+        return GraphMap;
+    }
+    /**
+     * Solves the simulation
+     * @param HeightTrack heigth of every track in meters
+     * @param WidthTrack widht of track in meters
+     * @param SimulationTime time in miliseconds
+     * @param droneCount drones that need to fly
+     * @param stationCount stations that need to be created
+     * @param tracksByStation minimun conections per station
+     */
+    public static long runSimulation(AlgorithmType type){
+       
         
         //start measuring time
         long iniTime = System.currentTimeMillis();
@@ -70,14 +81,14 @@ public class Simulation {
         if(type == AlgorithmType.Backtracking){
         Backtracking bc = new Backtracking();
         
-        bc.solve(Simulation.getBlockSize(), GraphMap, droneCount, stationCount, SimulationTime,Simulation.getMsBlockSize());
-        System.out.println("Tiempo utilizado backtracking = " + (System.currentTimeMillis() - iniTime) + "ms");
+        bc.solve(Simulation.getBlockSize(), GraphMap, droneCount, stationCount, simulationTime,Simulation.getMsBlockSize());
+        //System.out.println("Tiempo utilizado backtracking = " + (System.currentTimeMillis() - iniTime) + "ms");
        
         }else if(type == AlgorithmType.Probabilistic){
         
             Probabilistic pb = new Probabilistic();
-        pb.solve2(Simulation.getBlockSize(), GraphMap, droneCount, stationCount, SimulationTime,Simulation.getMsBlockSize());
-        System.out.println("Tiempo utilizado Probabilistico = " + (System.currentTimeMillis() - iniTime) + "ms");
+        pb.solve2(Simulation.getBlockSize(), GraphMap, droneCount, stationCount, simulationTime,Simulation.getMsBlockSize());
+        //System.out.println("Tiempo utilizado Probabilistico = " + (System.currentTimeMillis() - iniTime) + "ms");
         
         }
         
@@ -88,6 +99,7 @@ public class Simulation {
         /*for(GraphNode<Station> st : GraphMap.getNodes()){
         st.getContent().printTimelineIn();
         }*/
+        return (System.currentTimeMillis() - iniTime);
     }
 
     public static int getBlockSize() {

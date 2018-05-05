@@ -63,6 +63,19 @@
             <Label text="Pista" />
             <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
                <children>
+                  <Label text="Pistas" />
+                  <TextField fx:id="tfPistas" prefHeight="25.0" prefWidth="101.0" text="4">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </TextField>
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
+               <children>
                   <Label text="Ancho" />
                   <TextField fx:id="tfAnchoPista" prefHeight="25.0" prefWidth="101.0" text="200">
                      <HBox.margin>
@@ -139,10 +152,10 @@
                   <Insets />
                </opaqueInsets>
             </HBox>
-            <Button fx:id="bCrearMapa" mnemonicParsing="false" onAction="#createMap" text="Crear Mapa" />
+            <Button fx:id="bCrearMapa" mnemonicParsing="false" onAction="#createMap" text="Crear Simulacion" />
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="bIniciar" mnemonicParsing="false" text="Iniciar" />
+                  <Button fx:id="bIniciar" mnemonicParsing="false" onAction="#simulate" text="Simular" />
                   <Button fx:id="bPausar" mnemonicParsing="false" text="Pausar">
                      <HBox.margin>
                         <Insets left="5.0" />
