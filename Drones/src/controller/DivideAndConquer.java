@@ -83,7 +83,17 @@ public class DivideAndConquer extends SolutionAlgorithm{
         
         // Saca el minimo entre todos
         // Le suma a todos los de la derecha para que queden igual que el minimo
-        // for para revisar nodo por nodo cuanto mas hay que correrlo a la derecha
+        // for para revisar nodo por nodo cuanto mas hay que correrlo a la 
+	    
+	    int minimum = Integer.MAX_VALUE;
+        for(int leftIndex = 0; leftIndex < pLeftArray.get(pLeftArray.size() - 1).getValue().length; leftIndex++ ){
+            if(pLeftArray.get(pLeftArray.size() - 1).getValue()[leftIndex] < minimum){
+                minimum = pLeftArray.get(pLeftArray.size() - 1).getValue()[leftIndex];
+            }
+        }
+        
+        pLeftArray.addAll(pRightArray);
+        return pLeftArray;
     }
     
     public double distance(int x1, int y1, int x2, int y2) {
