@@ -28,6 +28,10 @@ public class ReportController {
         reports = new Report[totalFrames];
     }
     
+    public static void createReportController(int totaltTime, int realTime, int nodos){
+        instance = new ReportController(totaltTime,realTime,nodos);
+    }
+    
     /**
      * Adds a report to the timeline
      * @param nodoFuente
@@ -35,30 +39,30 @@ public class ReportController {
      * @param timestamp
      * @param amout 
      */
-    public void addDrones(int nodoFuente,int nodoDestino, int timestamp,int amout){
+    public synchronized void addDrones(int nodoFuente,int nodoDestino, int timestamp,int amout){
         int targetFrame = timestamp /totalTime*totalFrames;
         if(targetFrame < totalFrames){
             reports[targetFrame].addTrips(nodoFuente, nodoDestino, amout);
         }
     }
     
-    public void setTotalDrones( int timestamp,int amout){
+    public synchronized void setTotalDrones( int timestamp,int amout){
         int targetFrame = timestamp /totalTime*totalFrames;
         if(targetFrame < totalFrames){
             reports[targetFrame].setDronesEnviados(amout);
         }
     }
     
-    public static ReportController getInstance(){
+    public synchronized static ReportController getInstance(){
         return instance;
     } 
     
-    public Report getReport(){
+    public synchronized Report getReport(){
         return reports[pointer];
         
     }
     
-    public void incrementFrame(){
+    public synchronized void incrementFrame(){
         if(totalFrames > pointer){ 
             pointer++;
         }else{
@@ -66,18 +70,18 @@ public class ReportController {
         }
     }
     
-    public boolean finished(){
+    public synchronized boolean finished(){
         return pointer >= totalFrames;
     }
-    public boolean getNewAnimation() {
+    public synchronized boolean getNewAnimation() {
         return newAnimation;
     }
     
-    public void setNewAnimation(boolean newAnimation) {
+    public synchronized void setNewAnimation(boolean newAnimation) {
         this.newAnimation = newAnimation;
     }
 
-    public void setPointer(int pointer) {
+    public synchronized void setPointer(int pointer) {
         this.pointer = pointer;
     }
     

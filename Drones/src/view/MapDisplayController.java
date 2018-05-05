@@ -24,11 +24,13 @@ import java.util.logging.Logger;
 import javafx.animation.AnimationTimer;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -80,6 +82,8 @@ public class MapDisplayController implements Initializable, ThreadCompleteListen
     private TextField tfEstaciones;
     @FXML
     private TextField tfPistas;
+    @FXML
+    private ComboBox<AlgorithmType> cbTipo;
     //label de informacion
     @FXML
     private Label lNotice;
@@ -114,7 +118,7 @@ public class MapDisplayController implements Initializable, ThreadCompleteListen
         ListenerHelper.convert_to_number_field(tfTiempoReal);
         
        
-       
+       cbTipo.setItems(FXCollections.observableArrayList( AlgorithmType.values()));
        
     }
     
@@ -154,16 +158,17 @@ public class MapDisplayController implements Initializable, ThreadCompleteListen
         int height = Integer.parseInt(tfAltoMapa.getText());
         int ammountNodes = Integer.parseInt(tfEstaciones.getText());
         int trips = Integer.parseInt(tfViajes.getText());
-        int simulationTime = Integer.parseInt(tfTiempo.getText());
-        int realTime =  Integer.parseInt(tfTiempoReal.getText());
+        int simulationTime = Integer.parseInt(tfTiempo.getText())*60*60*1000;
+        int realTime =  Integer.parseInt(tfTiempoReal.getText())*1000;
         int tracks = Integer.parseInt(tfPistas.getText()); 
         //create a map the size desired by the user;
         //need some serious serialization for graph acces
         //free memory from unecesary structures created durign dijkstra
-        map = Simulation.CreateMap(height, width, simulationTime,trips, ammountNodes, tracks,width,height);
+        //map = Simulation.CreateMap(height, width, simulationTime,trips, ammountNodes, tracks,width,height);
+        map =  Simulation.CreateMap(1000, 4, 1000000, 1000000000, 30, 3,500,500);
         System.gc();
         
-        
+        ReportController.createReportController(simulationTime, realTime, ammountNodes);
         GraphicsContext gc = c_canvas.getGraphicsContext2D();
         GraphDisplay.stopDisplay();
         GraphDisplay.resetDisplay();
@@ -176,15 +181,22 @@ public class MapDisplayController implements Initializable, ThreadCompleteListen
     @FXML
     public void simulate(){
         //runs simultation in a thread
+        
         SimulationThread simulationThread = new SimulationThread();
         simulationThread.addListener(this);
+        if(cbTipo.getValue() == AlgorithmType.Backtracking){
         simulationThread.setType(AlgorithmType.Backtracking);
+        } else  if(cbTipo.getValue() == AlgorithmType.Euristic){
+        simulationThread.setType(AlgorithmType.Euristic);
+        }else  if(cbTipo.getValue() == AlgorithmType.Probabilistic){
+        simulationThread.setType(AlgorithmType.Probabilistic);   
+        }
         simulationThread.start();
     }
 
     @Override
     public synchronized void notifyOfThreadComplete(Thread thread, long duration) {
-        System.out.println(100);
+        System.out.println(duration);
         //ends the simulation
         try {
         

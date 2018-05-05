@@ -39,6 +39,7 @@ public class GraphDisplay {
         {
         public void handle(long currentNanoTime)
         {
+            System.out.println("drawing");
             //calcula el tamaño que debe tener el mapa en la pantalla
             double scaleFactor = Math.min((canvas.getWidth()-180)/width, canvas.getHeight()/height);
             //System.out.println(scaleFactor);
@@ -50,14 +51,22 @@ public class GraphDisplay {
             gc.drawImage(img, 0, 0,width*scaleFactor,height*scaleFactor);
             //gc.setLineWidth(2.0);
             ReportController reporter = ReportController.getInstance();
+            //System.out.println("Hola desde display" + reporter.getNewAnimation());
             for(code.GraphNode<Station> node : nodes){
                 Station station = node.getContent();
                 for(code.GraphNode<Station> neighbor : node.getPaths()){
                    gc.strokeLine((double) station.getX()*scaleFactor,(double)station.getY()*scaleFactor,
                            (double)neighbor.getContent().getX()*scaleFactor, (double)neighbor.getContent().getY()*scaleFactor);
                    //si la animacion no ha terminado de reproducirse
-                   if(reporter.getNewAnimation()){
+                   
+                   if(reporter.getNewAnimation() ){
+                       
+
+                        //controller.Report rep = reporter.getReport();
+                       //gc.strokeText("Frame: " + rep.getDronesEnviados(), 0, 0);
+                       
                        reporter.incrementFrame();
+                       
                    }
                 }
             //gc.fillRect(station.getX()-5, station.getY()-5, 10, 10);

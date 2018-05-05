@@ -11,6 +11,7 @@ import code.Graph;
 import code.GraphNode;
 import code.ThreadCompleteListener;
 import controller.AlgorithmType;
+import controller.ReportController;
 import controller.Simulation;
 import helper.MapHelper;
 import javafx.application.Application;
@@ -30,7 +31,7 @@ public class Drones extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("MapDisplay.fxml"));
         
         Scene scene = new Scene(root);
-        
+        ReportController.createReportController(0, 0, 0);
         stage.setScene(scene);
         stage.show();
         
