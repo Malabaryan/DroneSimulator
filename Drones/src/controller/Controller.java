@@ -22,29 +22,21 @@ import javafx.stage.Stage;
  *
  * @author DilanHO
  */
-public class Controller extends Application{
+public class Controller{
     
      
  
     
     public static void main(String[] args) {
         //Simulation.runSimulation(1000, 4, 1000000, 1000000000, 30, 3, AlgorithmType.Probabilistic);
-        //Simulation.runSimulation(1000, 4, 1000000, 1000000000, 30, 3, AlgorithmType.Backtracking);
+        Simulation.CreateMap(1000, 4, 1000000, 1000000000, 30, 3,500,500);
+        ReportController.createReportController(0, 0, 0);
+        System.out.println("Time:" + Simulation.runSimulation(AlgorithmType.Backtracking));
         int size = 3;
-        launch(args);
+
     }
 
-       @Override
-        public void start(Stage stage) throws Exception {
-        //Parent root = FXMLLoader.load(getClass().getResource("view/MapDisplay.fxml"));
         
-        //Scene scene = new Scene(root);
-        
-        //stage.setScene(scene);
-        //stage.show();
-        
-
-        
-    }
+    
 
 }

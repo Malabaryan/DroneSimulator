@@ -13,7 +13,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * @author Carlos
  */
 public abstract class NotifyingThread extends Thread {
-  private long simulationTime;
   private final Set<ThreadCompleteListener> listeners
                    = new CopyOnWriteArraySet<ThreadCompleteListener>();
   public final void addListener(final ThreadCompleteListener listener) {
@@ -22,18 +21,19 @@ public abstract class NotifyingThread extends Thread {
   public final void removeListener(final ThreadCompleteListener listener) {
     listeners.remove(listener);
   }
-  private final void notifyListeners() {
+  private final void notifyListeners(long stime) {
     for (ThreadCompleteListener listener : listeners) {
-      listener.notifyOfThreadComplete(this,simulationTime);
+      listener.notifyOfThreadComplete(this, stime);
     }
   }
   @Override
   public final void run() {
+    long time = 0;
     try {
-      doRun();
+      time = doRun();
     } finally {
-      notifyListeners();
+      notifyListeners(time);
     }
   }
-  public abstract void doRun();
+  public abstract long doRun();
 }

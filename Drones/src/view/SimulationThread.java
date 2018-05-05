@@ -15,9 +15,8 @@ import controller.Simulation;
  */
 public class SimulationThread extends NotifyingThread{
     private AlgorithmType type = AlgorithmType.Backtracking;
-    private long simulationTime;
-    public void doRun(){
-        simulationTime = Simulation.runSimulation(type);
+    public long doRun(){
+        return Simulation.runSimulation(type);
     }
 
     public AlgorithmType getType() {
@@ -26,10 +25,6 @@ public class SimulationThread extends NotifyingThread{
 
     public void setType(AlgorithmType type) {
         this.type = type;
-    }
-
-    public long getSimulationTime() {
-        return simulationTime;
     }
     
     

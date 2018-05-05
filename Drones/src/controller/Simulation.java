@@ -91,7 +91,7 @@ public class Simulation {
         //System.out.println("Tiempo utilizado Probabilistico = " + (System.currentTimeMillis() - iniTime) + "ms");
         
         }
-        
+        ReportController.instance.setNewAnimation(true);
         //print used time
         //System.out.println("Tiempo utilizado backtracking = " + (System.currentTimeMillis() - iniTime) + "ms");
         
