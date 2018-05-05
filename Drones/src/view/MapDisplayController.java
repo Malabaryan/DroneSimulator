@@ -5,14 +5,22 @@
  */
 package view;
 
+import code.Graph;
 import controller.GraphDisplay;
 import controller.MapConstructor;
 import controller.Station;
 import code.GraphNode;
+import code.NotifyingThread;
+import code.ThreadCompleteListener;
+import controller.AlgorithmType;
+import controller.ReportController;
+import controller.Simulation;
 import helper.ListenerHelper;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.AnimationTimer;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -34,7 +42,7 @@ import javafx.scene.text.Font;
  *
  * @author Carlos
  */
-public class MapDisplayController implements Initializable {
+public class MapDisplayController implements Initializable, ThreadCompleteListener  {
 
     /**
      * Initializes the controller class.
@@ -70,12 +78,14 @@ public class MapDisplayController implements Initializable {
     private TextField tfTiempoReal;
     @FXML
     private TextField tfEstaciones;
+    @FXML
+    private TextField tfPistas;
     //label de informacion
     @FXML
     private Label lNotice;
     
     //custom properties
-    private MapConstructor map;
+    private Graph<Station> map;
     
     //private ArrayList<Node<Station>> nodes;
     @Override
@@ -110,7 +120,7 @@ public class MapDisplayController implements Initializable {
     
     @FXML
     public void createMap(){
-        GraphicsContext gc = c_canvas.getGraphicsContext2D();
+        
         //we start verifyng every input
         lNotice.setTextFill(Color.rgb(183, 3, 3));
         if(tfAltoMapa.getText().trim().isEmpty()){ 
@@ -144,11 +154,17 @@ public class MapDisplayController implements Initializable {
         int height = Integer.parseInt(tfAltoMapa.getText());
         int ammountNodes = Integer.parseInt(tfEstaciones.getText());
         int trips = Integer.parseInt(tfViajes.getText());
+        int simulationTime = Integer.parseInt(tfTiempo.getText());
+        int realTime =  Integer.parseInt(tfTiempoReal.getText());
+        int tracks = Integer.parseInt(tfPistas.getText()); 
         //create a map the size desired by the user;
         //need some serious serialization for graph acces
-        map = new MapConstructor(width, height, 1.0, ammountNodes,trips);
         //free memory from unecesary structures created durign dijkstra
+        map = Simulation.CreateMap(height, width, simulationTime,trips, ammountNodes, tracks,width,height);
         System.gc();
+        
+        
+        GraphicsContext gc = c_canvas.getGraphicsContext2D();
         GraphDisplay.stopDisplay();
         GraphDisplay.resetDisplay();
         GraphDisplay.startDisplay(gc, c_canvas, map.getNodes(),width,height,System.currentTimeMillis());
@@ -156,5 +172,33 @@ public class MapDisplayController implements Initializable {
         lNotice.setTextFill(Color.rgb(10, 150, 0));
         lNotice.setText("Mapa creado correctamente!!");
     }
+    
+    @FXML
+    public void simulate(){
+        //runs simultation in a thread
+        SimulationThread simulationThread = new SimulationThread();
+        simulationThread.addListener(this);
+        simulationThread.setType(AlgorithmType.Backtracking);
+        simulationThread.start();
+    }
+
+    @Override
+    public synchronized void notifyOfThreadComplete(Thread thread, long duration) {
+        System.out.println(100);
+        //ends the simulation
+        try {
+        
+            thread.join(1000);
+            //start displaying the animation
+            ReportController.getInstance().setNewAnimation(true);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MapDisplayController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //System.out.println("EndedThread");
+    }
+    
+   
+    
+    
     
 }

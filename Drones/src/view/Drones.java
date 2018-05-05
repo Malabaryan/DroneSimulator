@@ -9,6 +9,9 @@ import controller.MapConstructor;
 import controller.Station;
 import code.Graph;
 import code.GraphNode;
+import code.ThreadCompleteListener;
+import controller.AlgorithmType;
+import controller.Simulation;
 import helper.MapHelper;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -30,6 +33,7 @@ public class Drones extends Application {
         
         stage.setScene(scene);
         stage.show();
+        
         
 
         

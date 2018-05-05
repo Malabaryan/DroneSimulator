@@ -16,18 +16,42 @@ public class Report {
     private int endtimestamp;
     private int initialtimestamp;
     //segments used to draw the line
+    
     //granularity of representation
     private int segments;
     
     //a representation of the drones moving;
     private int movingDrones[][];
     
-    public Report(int pInitialTimestamp, int pEndTimestamp){
+    public Report(int pInitialTimestamp, int pEndTimestamp, int nodes){
         initialtimestamp = pInitialTimestamp;
         endtimestamp = pEndTimestamp;
-    }
-    
-    public void addTrips(){
+        movingDrones = new int[nodes][nodes];
+        for(int i = 0; i < nodes; i++){
+            for(int j = 0 ; j < nodes; j++){
+                movingDrones[i][j] = 0;
+            }
+        }
+        dronesEnviados = 0;
+        
         
     }
+    
+    public void addTrips(int initialNode, int finalNode, int drones){
+        movingDrones[initialNode][finalNode] += drones;
+    }
+    
+    public int getTrips(int initialNode, int finalNode, int drones){
+        return movingDrones[initialNode][finalNode];
+    }
+
+    public int getDronesEnviados() {
+        return dronesEnviados;
+    }
+
+    public void setDronesEnviados(int dronesEnviados) {
+        this.dronesEnviados = dronesEnviados;
+    }
+    
+    
 }
