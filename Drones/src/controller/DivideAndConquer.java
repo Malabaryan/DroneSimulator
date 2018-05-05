@@ -9,6 +9,11 @@ import code.Graph;
 import code.GraphNode;
 import controller.Station;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import javafx.util.Pair;
+
 
 /**
  *
@@ -17,39 +22,78 @@ import java.util.ArrayList;
 public class DivideAndConquer extends SolutionAlgorithm{
 
     @Override
-    public void solve(int dronesByBlock, Graph<Station> GraphMap, int DronesCount, int stationCount, int simulationTime, int blockSize) {
+    public void solve(
+            int dronesByBlock, Graph<Station> GraphMap, 
+            int DronesCount, int stationCount, 
+            int simulationTime, int blockSize) {
         
-    int trips = DronesCount / dronesByBlock;
+        Random randomSeed = new Random();
+        int trips = DronesCount/dronesByBlock;
+        
+        List<Pair<int[], int[]>> Routes;
+        Routes = new ArrayList();
+        
+        ArrayList<GraphNode<Station>> TempRoute;
+        for(int cantTripsLeft = 0;trips < cantTripsLeft; cantTripsLeft++){
+            TempRoute = GraphMap.getNode( 
+                    randomSeed.nextInt(stationCount) ).getContent().getOptimalRoutes().get(
+                    GraphMap.getNode( randomSeed.nextInt(stationCount) ));
+            
+            Routes.add(new Pair( 
+                    getWays(TempRoute,GraphMap ),
+                    getWays(TempRoute,GraphMap ))
+                                );
+        }
+        
+        solveAux( Routes, GraphMap );
+    }
     
-    ArrayList<GraphNode<Station>>[] Route;
-    Route = new ArrayList[trips];
+    // Convert a Route on a two arrays of stationCount ints
+    int[] getWays(ArrayList<GraphNode<Station>> pRoute, Graph<Station> pGraphMap ){
+        
+       int[] ways = new int[pGraphMap.getNodes().size()];
+       GraphNode<Station> TempNode = pRoute.get(0);
+       for( GraphNode<Station> Node : pRoute ){
+           ways[pGraphMap.getNodes().indexOf(Node)] = (int)(distance(
+                   TempNode.getContent().getX(), TempNode.getContent().getY(), 
+                   Node.getContent().getX(),Node.getContent().getY())) / 120;
+           TempNode = Node;
+       }
+       
+       return ways;
+       
+    }
+    
+    // Recursive function that divide and conquer
+    List<Pair<int[], int[]>> solveAux(List< Pair<int[], int[]> > pRoutes, Graph<Station> pGraphMap ){
+        
+        if(pRoutes.size() == 1){
+            return pRoutes;
+	}
+        
+        return compareTwoArrays( 
+        solveAux( pRoutes.subList(0, pRoutes.size()/2) ,pGraphMap),
+        solveAux( pRoutes.subList(pRoutes.size()/2 + 1,pRoutes.size() ),pGraphMap)        
+        );
+        
+    }
+    
+    // Return pLeftArray + pRightArray
+    List<Pair<int[], int[]>> compareTwoArrays(List<Pair<int[], int[]>> pLeftArray, List<Pair<int[], int[]>> pRightArray){
+        
+        // Saca el minimo entre todos
+        // Le suma a todos los de la derecha para que queden igual que el minimo
+        // for para revisar nodo por nodo cuanto mas hay que correrlo a la derecha
+    }
+    
+    public double distance(int x1, int y1, int x2, int y2) {
 
-    for(int cantTripsLeft = 0;trips < cantTripsLeft; cantTripsLeft++){
-        Route[trips] = GraphMap.getNode(22222222).getContent().getOptimalRoutes().get(
-                                                    GraphMap.getNode( 222222 ));
+        return Math.sqrt((x1-x2) * (x1-x2) + (y1-y2) * (y1-y2));
     }
     
-    int between = Route.length/2;
-    ArrayList<GraphNode<Station>>[] RouteLeft = new ArrayList[between];
-    ArrayList<GraphNode<Station>>[] RouteRight = new ArrayList[between];
-    System.arraycopy(Route,0, RouteLeft,0,between);
-    System.arraycopy(Route,0, RouteLeft,0,between);
-    divideAux(RouteLeft, RouteRight, Route);
-    }
+  
     
-    public void divideAux(ArrayList<GraphNode<Station>>[] Left, ArrayList<GraphNode<Station>>[] Right, ArrayList<GraphNode<Station>>[] Route){
-        int between = Route.length/2;
-        if(between < 2){
-            
-        }
-        else{
-            ArrayList<GraphNode<Station>>[] RouteLeft = new ArrayList[between];
-            ArrayList<GraphNode<Station>>[] RouteRight = new ArrayList[between];
-            System.arraycopy(Route,0, RouteLeft,0,between);
-            System.arraycopy(Route,0, RouteLeft,0,between);
-            divideAux(RouteLeft, RouteRight, Route);
-        }
-        
-            
-    }
+    
+    
+
 }
