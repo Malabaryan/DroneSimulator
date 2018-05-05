@@ -7,6 +7,7 @@ package controller;
 
 import code.Graph;
 import code.GraphNode;
+import helper.LexicographicalOrderedHelper;
 import helper.MapHelper;
 import java.util.ArrayList;
 import java.util.Random;
@@ -111,11 +112,5 @@ public class Backtracking extends SolutionAlgorithm{
        
        
     }
-    
-
-
-    
- 
-
-    
+       
 }
