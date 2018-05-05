@@ -83,14 +83,23 @@ public class DivideAndConquer extends SolutionAlgorithm{
         
         // Saca el minimo entre todos
         // Le suma a todos los de la derecha para que queden igual que el minimo
-        // for para revisar nodo por nodo cuanto mas hay que correrlo a la 
-	    
-	    int minimum = Integer.MAX_VALUE;
+        // for para revisar nodo por nodo cuanto mas hay que correrlo a la derecha
+        int minimumL = Integer.MAX_VALUE;
         for(int leftIndex = 0; leftIndex < pLeftArray.get(pLeftArray.size() - 1).getValue().length; leftIndex++ ){
-            if(pLeftArray.get(pLeftArray.size() - 1).getValue()[leftIndex] < minimum){
-                minimum = pLeftArray.get(pLeftArray.size() - 1).getValue()[leftIndex];
+            if(pLeftArray.get(pLeftArray.size() - 1).getValue()[leftIndex] < minimumL){
+                minimumL = pLeftArray.get(pLeftArray.size() - 1).getValue()[leftIndex];
             }
         }
+        int minimumR = Integer.MAX_VALUE;
+        for(int rightIndex = 0; rightIndex < pLeftArray.get(pLeftArray.size() - 1).getValue().length; rightIndex++ ){
+            if(pRightArray.get(pRightArray.size() - 1).getValue()[rightIndex] < minimumR){
+                minimumR = pRightArray.get(pRightArray.size() - 1).getValue()[rightIndex];
+            }
+        }
+        
+        // Corre el array derecho hacia la derecha
+        // un for para comparar y buscar la forma de correr el derecho lo menos posible
+        // para que este comprimido, se aproveche el espacio y soluciones el problema
         
         pLeftArray.addAll(pRightArray);
         return pLeftArray;
