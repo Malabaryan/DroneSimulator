@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import controller.Station;
 import code.GraphNode;
+import controller.ReportController;
 import helper.RandomNoiseGenerator;
 import java.awt.image.BufferedImage;
 import javafx.embed.swing.SwingFXUtils;
@@ -38,6 +39,7 @@ public class GraphDisplay {
         {
         public void handle(long currentNanoTime)
         {
+            System.out.println("drawing");
             //calcula el tamaño que debe tener el mapa en la pantalla
             double scaleFactor = Math.min((canvas.getWidth()-180)/width, canvas.getHeight()/height);
             //System.out.println(scaleFactor);
@@ -48,11 +50,24 @@ public class GraphDisplay {
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
             gc.drawImage(img, 0, 0,width*scaleFactor,height*scaleFactor);
             //gc.setLineWidth(2.0);
+            ReportController reporter = ReportController.getInstance();
+            //System.out.println("Hola desde display" + reporter.getNewAnimation());
             for(code.GraphNode<Station> node : nodes){
                 Station station = node.getContent();
                 for(code.GraphNode<Station> neighbor : node.getPaths()){
                    gc.strokeLine((double) station.getX()*scaleFactor,(double)station.getY()*scaleFactor,
                            (double)neighbor.getContent().getX()*scaleFactor, (double)neighbor.getContent().getY()*scaleFactor);
+                   //si la animacion no ha terminado de reproducirse
+                   
+                   if(reporter.getNewAnimation() ){
+                       
+
+                        //controller.Report rep = reporter.getReport();
+                       //gc.strokeText("Frame: " + rep.getDronesEnviados(), 0, 0);
+                       
+                       reporter.incrementFrame();
+                       
+                   }
                 }
             //gc.fillRect(station.getX()-5, station.getY()-5, 10, 10);
             gc.fillArc(station.getX()*scaleFactor-5, station.getY()*scaleFactor-5, 10, 10, 0, 360, ArcType.CHORD);

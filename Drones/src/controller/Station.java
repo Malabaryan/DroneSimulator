@@ -8,6 +8,7 @@ package controller;
 import code.GraphNode;
 import code.Timeline;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,27 +27,76 @@ public class Station {
     private Map<code.GraphNode<Station>,Integer> costs;
     
     private int[] trips;
+    private int id;
+    
     
     public Station() {
         this.x = 0;
         this.y = 0;
         remainingTrips = new HashMap<GraphNode<Station>,Integer>();
-        
+        LineIn = new Timeline(1000000);
+        LineOut = new Timeline(1000000);
     }
 
     public Station(int x, int y) {
         this.x = x;
         this.y = y;
         remainingTrips = new HashMap<GraphNode<Station>,Integer>();
+        LineIn = new Timeline(1000000);
+        LineOut = new Timeline(1000000);
 
     }
     
-    public Station(int pX, int pY, int pTotalNodos) {
-        this.x = pX;
-        this.y = pY;
+    public Station(int x, int y, int id) {
+        this.x = x;
+        this.y = y;
         remainingTrips = new HashMap<GraphNode<Station>,Integer>();
-        
-        
+        this.id = id;
+        LineIn = new Timeline(1000000);
+        LineOut = new Timeline(1000000);
+    }
+    
+    public Station(int x, int y, int id, int timelineSize) {
+        this.x = x;
+        this.y = y;
+        remainingTrips = new HashMap<GraphNode<Station>,Integer>();
+        this.id = id;
+        LineIn = new Timeline(timelineSize);
+        LineOut = new Timeline(timelineSize);
+    }
+    
+    /**
+     * Reserve space for incoming drones
+     * @param timestamp milisecond
+     */
+    public boolean reserveIn(int timestamp){
+        return LineIn.reserveTimeBlock(timestamp);
+    }
+    
+    public boolean reserveInIgnore(int timestamp){
+        return LineIn.reserveTimeBlockIgnore(timestamp);
+    }
+    /**
+     * free space for incoming drones
+     * @param timestamp milisecond
+     */
+    public void freeIn(int timestamp){
+        LineIn.retireTimeBlock(timestamp);
+    }
+    
+    /**
+     * reserve space for starting starting drones
+     * @param timestamp milisecond
+     */
+    public boolean reserveOut(int timestamp){
+        return LineOut.reserveTimeBlock(timestamp);
+    }
+    /**
+     * reserve space for starting starting drones
+     * @param timestamp milisecond
+     */
+    public void freeOut(int timestamp){
+        LineOut.retireTimeBlock(timestamp);
     }
     
     //getters and setters- ------------------------------------------------
@@ -81,6 +131,7 @@ public class Station {
     public void setLineIn(Timeline LineIn) {
         this.LineIn = LineIn;
     }
+    
 
     public Timeline getLineOut() {
         return LineOut;
@@ -93,7 +144,38 @@ public class Station {
     public void setTrips(GraphNode pTarget, int pAmount){
         remainingTrips.put(pTarget, pAmount);
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
     
+    public void printTimelineIn(){
+        BitSet line = LineIn.getLine();
+        System.out.println(LineIn.getMaxSpace() + ", " + line.size());
+        for(int i = 0; i < line.size(); i++){
+            if(i %100 == 0) System.out.println("|" + Simulation.getMsBlockSize()*i);
+            if(line.get(i) == true){
+                System.out.print("1");
+            }else{
+                System.out.print("0");
+            }
+            
+        }
+        System.out.println("|");
+    
+    }
+    
+    public int getNextFreeTimeIn(){
+        return LineIn.getNext();
+    }
+    
+    public int getNextFreeTimeIn(int pBlockSize){
+        return LineIn.getNext()*pBlockSize;
+    }
 
     
 }
